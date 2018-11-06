@@ -3,22 +3,13 @@
 <mapper namespace="com.skm.demo.persistence.dao.UserDao">
     <resultMap id="RM" type="com.skm.demo.domain.UserBean">
         <id column="id" jdbcType="BIGINT" property="id" />
-        <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
-        <result column="company_id" jdbcType="BIGINT" property="companyId" />
-        <result column="dept_id" jdbcType="BIGINT" property="deptId" />
-        <result column="type" jdbcType="TINYINT" property="type" />
+        <result column="login_username" jdbcType="VARCHAR" property="loginUsername" />
+        <result column="login_password" jdbcType="VARCHAR" property="loginPassword" />
+        <result column="openid" jdbcType="VARCHAR" property="openid" />
         <result column="name" jdbcType="VARCHAR" property="name" />
-        <result column="real_name" jdbcType="VARCHAR" property="realName" />
-        <result column="lang" jdbcType="VARCHAR" property="lang" />
-        <result column="email" jdbcType="VARCHAR" property="email" />
-        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="user_type" jdbcType="SMALLINT" property="userType" />
         <result column="status" jdbcType="TINYINT" property="status" />
-        <result column="gender" jdbcType="TINYINT" property="gender" />
-        <result column="birthday" jdbcType="DATE" property="birthday" />
-        <result column="tel" jdbcType="VARCHAR" property="tel" />
-        <result column="remark" jdbcType="LONGVARCHAR" property="remark" />
-        <result column="login_error_num" jdbcType="INTEGER" property="loginErrorNum" />
-        <result column="verify_code" jdbcType="VARCHAR" property="verifyCode" />
         <result column="entry_id" jdbcType="BIGINT" property="entryId" />
         <result column="entry_name" jdbcType="VARCHAR" property="entryName" />
         <result column="entry_dt" jdbcType="TIMESTAMP" property="entryDt" />
@@ -29,22 +20,13 @@
 
     <sql id="columns">
         `id`,
-        `tenant_id`,
-        `company_id`,
-        `dept_id`,
-        `type`,
+        `login_username`,
+        `login_password`,
+        `openid`,
         `name`,
-        `real_name`,
-        `lang`,
-        `email`,
-        `password`,
+        `phone`,
+        `user_type`,
         `status`,
-        `gender`,
-        `birthday`,
-        `tel`,
-        `remark`,
-        `login_error_num`,
-        `verify_code`,
         `entry_id`,
         `entry_name`,
         `entry_dt`,
@@ -53,26 +35,17 @@
         `update_dt`
     </sql>
 
-    <insert id="save" keyProperty="id">
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
         <![CDATA[
-             INSERT INTO `suser_user` (
+             INSERT INTO `common_user` (
                   `id`,
-                  `tenant_id`,
-                  `company_id`,
-                  `dept_id`,
-                  `type`,
+                  `login_username`,
+                  `login_password`,
+                  `openid`,
                   `name`,
-                  `real_name`,
-                  `lang`,
-                  `email`,
-                  `password`,
+                  `phone`,
+                  `user_type`,
                   `status`,
-                  `gender`,
-                  `birthday`,
-                  `tel`,
-                  `remark`,
-                  `login_error_num`,
-                  `verify_code`,
                   `entry_id`,
                   `entry_name`,
                   `entry_dt`,
@@ -82,22 +55,13 @@
                 )
             VALUES (
                   #{id, jdbcType=BIGINT},
-                  #{tenantId, jdbcType=BIGINT},
-                  #{companyId, jdbcType=BIGINT},
-                  #{deptId, jdbcType=BIGINT},
-                  #{type, jdbcType=TINYINT},
+                  #{loginUsername, jdbcType=VARCHAR},
+                  #{loginPassword, jdbcType=VARCHAR},
+                  #{openid, jdbcType=VARCHAR},
                   #{name, jdbcType=VARCHAR},
-                  #{realName, jdbcType=VARCHAR},
-                  #{lang, jdbcType=VARCHAR},
-                  #{email, jdbcType=VARCHAR},
-                  #{password, jdbcType=VARCHAR},
+                  #{phone, jdbcType=VARCHAR},
+                  #{userType, jdbcType=SMALLINT},
                   #{status, jdbcType=TINYINT},
-                  #{gender, jdbcType=TINYINT},
-                  #{birthday, jdbcType=DATE},
-                  #{tel, jdbcType=VARCHAR},
-                  #{remark, jdbcType=LONGVARCHAR},
-                  #{loginErrorNum, jdbcType=INTEGER},
-                  #{verifyCode, jdbcType=VARCHAR},
                   #{entryId, jdbcType=BIGINT},
                   #{entryName, jdbcType=VARCHAR},
                   #{entryDt, jdbcType=TIMESTAMP},
@@ -108,26 +72,17 @@
         ]]>
     </insert>
 
-    <insert id="batchSave" parameterType="com.skm.common.mybatis.dto.BatchInsertParameter" keyProperty="id">
+    <insert id="batchSave" useGeneratedKeys="true" parameterType="com.skm.common.mybatis.dto.BatchInsertParameter" keyProperty="id">
       <![CDATA[
-               INSERT INTO `suser_user` (
+               INSERT INTO `common_user` (
                     `id`,
-                    `tenant_id`,
-                    `company_id`,
-                    `dept_id`,
-                    `type`,
+                    `login_username`,
+                    `login_password`,
+                    `openid`,
                     `name`,
-                    `real_name`,
-                    `lang`,
-                    `email`,
-                    `password`,
+                    `phone`,
+                    `user_type`,
                     `status`,
-                    `gender`,
-                    `birthday`,
-                    `tel`,
-                    `remark`,
-                    `login_error_num`,
-                    `verify_code`,
                     `entry_id`,
                     `entry_name`,
                     `entry_dt`,
@@ -137,22 +92,13 @@
                   )
               VALUES (
                     #{id, jdbcType=BIGINT},
-                    #{tenantId, jdbcType=BIGINT},
-                    #{companyId, jdbcType=BIGINT},
-                    #{deptId, jdbcType=BIGINT},
-                    #{type, jdbcType=TINYINT},
+                    #{loginUsername, jdbcType=VARCHAR},
+                    #{loginPassword, jdbcType=VARCHAR},
+                    #{openid, jdbcType=VARCHAR},
                     #{name, jdbcType=VARCHAR},
-                    #{realName, jdbcType=VARCHAR},
-                    #{lang, jdbcType=VARCHAR},
-                    #{email, jdbcType=VARCHAR},
-                    #{password, jdbcType=VARCHAR},
+                    #{phone, jdbcType=VARCHAR},
+                    #{userType, jdbcType=SMALLINT},
                     #{status, jdbcType=TINYINT},
-                    #{gender, jdbcType=TINYINT},
-                    #{birthday, jdbcType=DATE},
-                    #{tel, jdbcType=VARCHAR},
-                    #{remark, jdbcType=LONGVARCHAR},
-                    #{loginErrorNum, jdbcType=INTEGER},
-                    #{verifyCode, jdbcType=VARCHAR},
                     #{entryId, jdbcType=BIGINT},
                     #{entryName, jdbcType=VARCHAR},
                     #{entryDt, jdbcType=TIMESTAMP},
@@ -165,23 +111,14 @@
 
     <update id="update" >
         <![CDATA[
-            UPDATE `suser_user`
-                SET `tenant_id` = #{tenantId, jdbcType=BIGINT}
-                    , `company_id` = #{companyId, jdbcType=BIGINT}
-                    , `dept_id` = #{deptId, jdbcType=BIGINT}
-                    , `type` = #{type, jdbcType=TINYINT}
+            UPDATE `common_user`
+                SET `login_username` = #{loginUsername, jdbcType=VARCHAR}
+                    , `login_password` = #{loginPassword, jdbcType=VARCHAR}
+                    , `openid` = #{openid, jdbcType=VARCHAR}
                     , `name` = #{name, jdbcType=VARCHAR}
-                    , `real_name` = #{realName, jdbcType=VARCHAR}
-                    , `lang` = #{lang, jdbcType=VARCHAR}
-                    , `email` = #{email, jdbcType=VARCHAR}
-                    , `password` = #{password, jdbcType=VARCHAR}
+                    , `phone` = #{phone, jdbcType=VARCHAR}
+                    , `user_type` = #{userType, jdbcType=SMALLINT}
                     , `status` = #{status, jdbcType=TINYINT}
-                    , `gender` = #{gender, jdbcType=TINYINT}
-                    , `birthday` = #{birthday, jdbcType=DATE}
-                    , `tel` = #{tel, jdbcType=VARCHAR}
-                    , `remark` = #{remark, jdbcType=LONGVARCHAR}
-                    , `login_error_num` = #{loginErrorNum, jdbcType=INTEGER}
-                    , `verify_code` = #{verifyCode, jdbcType=VARCHAR}
                     , `update_id` = #{updateId, jdbcType=BIGINT}
                     , `update_name` = #{updateName, jdbcType=VARCHAR}
                     , `update_dt` = #{updateDt, jdbcType=TIMESTAMP}
@@ -191,23 +128,14 @@
 
     <update id="batchUpdate" keyProperty="id" parameterType="com.skm.common.mybatis.dto.BatchUpdateParameter">
       <![CDATA[
-            UPDATE `suser_user`
-                SET `tenant_id` = #{tenantId, jdbcType=BIGINT}
-                    , `company_id` = #{companyId, jdbcType=BIGINT}
-                    , `dept_id` = #{deptId, jdbcType=BIGINT}
-                    , `type` = #{type, jdbcType=TINYINT}
+            UPDATE `common_user`
+                SET `login_username` = #{loginUsername, jdbcType=VARCHAR}
+                    , `login_password` = #{loginPassword, jdbcType=VARCHAR}
+                    , `openid` = #{openid, jdbcType=VARCHAR}
                     , `name` = #{name, jdbcType=VARCHAR}
-                    , `real_name` = #{realName, jdbcType=VARCHAR}
-                    , `lang` = #{lang, jdbcType=VARCHAR}
-                    , `email` = #{email, jdbcType=VARCHAR}
-                    , `password` = #{password, jdbcType=VARCHAR}
+                    , `phone` = #{phone, jdbcType=VARCHAR}
+                    , `user_type` = #{userType, jdbcType=SMALLINT}
                     , `status` = #{status, jdbcType=TINYINT}
-                    , `gender` = #{gender, jdbcType=TINYINT}
-                    , `birthday` = #{birthday, jdbcType=DATE}
-                    , `tel` = #{tel, jdbcType=VARCHAR}
-                    , `remark` = #{remark, jdbcType=LONGVARCHAR}
-                    , `login_error_num` = #{loginErrorNum, jdbcType=INTEGER}
-                    , `verify_code` = #{verifyCode, jdbcType=VARCHAR}
                     , `update_id` = #{updateId, jdbcType=BIGINT}
                     , `update_name` = #{updateName, jdbcType=VARCHAR}
                     , `update_dt` = #{updateDt, jdbcType=TIMESTAMP}
@@ -216,24 +144,15 @@
     </update>
 
     <update id="dynamicUpdate">
-        UPDATE `suser_user`
+        UPDATE `common_user`
         <set>
-            <if test="@Ognl@isNotEmpty(tenantId)"> `tenant_id` = #{tenantId, jdbcType=BIGINT},  </if>
-            <if test="@Ognl@isNotEmpty(companyId)"> `company_id` = #{companyId, jdbcType=BIGINT},  </if>
-            <if test="@Ognl@isNotEmpty(deptId)"> `dept_id` = #{deptId, jdbcType=BIGINT},  </if>
-            <if test="@Ognl@isNotEmpty(type)"> `type` = #{type, jdbcType=TINYINT},  </if>
+            <if test="@Ognl@isNotEmpty(loginUsername)"> `login_username` = #{loginUsername, jdbcType=VARCHAR},  </if>
+            <if test="@Ognl@isNotEmpty(loginPassword)"> `login_password` = #{loginPassword, jdbcType=VARCHAR},  </if>
+            <if test="@Ognl@isNotEmpty(openid)"> `openid` = #{openid, jdbcType=VARCHAR},  </if>
             <if test="@Ognl@isNotEmpty(name)"> `name` = #{name, jdbcType=VARCHAR},  </if>
-            <if test="@Ognl@isNotEmpty(realName)"> `real_name` = #{realName, jdbcType=VARCHAR},  </if>
-            <if test="@Ognl@isNotEmpty(lang)"> `lang` = #{lang, jdbcType=VARCHAR},  </if>
-            <if test="@Ognl@isNotEmpty(email)"> `email` = #{email, jdbcType=VARCHAR},  </if>
-            <if test="@Ognl@isNotEmpty(password)"> `password` = #{password, jdbcType=VARCHAR},  </if>
+            <if test="@Ognl@isNotEmpty(phone)"> `phone` = #{phone, jdbcType=VARCHAR},  </if>
+            <if test="@Ognl@isNotEmpty(userType)"> `user_type` = #{userType, jdbcType=SMALLINT},  </if>
             <if test="@Ognl@isNotEmpty(status)"> `status` = #{status, jdbcType=TINYINT},  </if>
-            <if test="@Ognl@isNotEmpty(gender)"> `gender` = #{gender, jdbcType=TINYINT},  </if>
-            <if test="@Ognl@isNotEmpty(birthday)"> `birthday` = #{birthday, jdbcType=DATE},  </if>
-            <if test="@Ognl@isNotEmpty(tel)"> `tel` = #{tel, jdbcType=VARCHAR},  </if>
-            <if test="@Ognl@isNotEmpty(remark)"> `remark` = #{remark, jdbcType=LONGVARCHAR},  </if>
-            <if test="@Ognl@isNotEmpty(loginErrorNum)"> `login_error_num` = #{loginErrorNum, jdbcType=INTEGER},  </if>
-            <if test="@Ognl@isNotEmpty(verifyCode)"> `verify_code` = #{verifyCode, jdbcType=VARCHAR},  </if>
             <if test="@Ognl@isNotEmpty(updateId)"> `update_id` = #{updateId, jdbcType=BIGINT},  </if>
             <if test="@Ognl@isNotEmpty(updateName)"> `update_name` = #{updateName, jdbcType=VARCHAR},  </if>
             <if test="@Ognl@isNotEmpty(updateDt)"> `update_dt` = #{updateDt, jdbcType=TIMESTAMP},  </if>
@@ -244,7 +163,7 @@
     <select id="get" resultMap="RM" parameterType="java.lang.Long">
         SELECT <include refid="columns" />
         <![CDATA[
-            FROM `suser_user`
+            FROM `common_user`
             WHERE
                 `id` = #{id, jdbcType=BIGINT}
         ]]>
@@ -252,7 +171,7 @@
 
     <select id="getByIds" resultMap="RM">
       SELECT <include refid="columns" />
-      FROM `suser_user`
+      FROM `common_user`
       WHERE `id` IN
       <foreach collection="list" item="item" separator="," open="(" close=")">
         #{item}
@@ -261,19 +180,19 @@
 
     <delete id="del" parameterType="java.lang.Long">
         <![CDATA[
-            DELETE FROM `suser_user` WHERE `id` = #{id, jdbcType=BIGINT}
+            DELETE FROM `common_user` WHERE `id` = #{id, jdbcType=BIGINT}
         ]]>
     </delete>
 
     <delete id="batchDelete" parameterType="com.skm.common.mybatis.dto.BatchUpdateParameter">
       <![CDATA[
-              DELETE FROM `suser_user` WHERE `id` = #{id, jdbcType=BIGINT}
+              DELETE FROM `common_user` WHERE `id` = #{id, jdbcType=BIGINT}
           ]]>
     </delete>
 
     <delete id="delByIds">
         DELETE
-        FROM `suser_user`
+        FROM `common_user`
         WHERE `id` IN
         <foreach collection="list" item="item" separator="," open="(" close=")">
           #{item}
@@ -281,47 +200,36 @@
     </delete>
 
     <select id="dynamicSelect"  resultMap="RM">
-        SELECT <include refid="columns" /> FROM `suser_user` <include refid="querySql" />
+        SELECT <include refid="columns" /> FROM `common_user` <include refid="querySql" />
     </select>
 
     <select id="dynamicSelectPage"  resultMap="RM">
-        SELECT <include refid="columns" /> FROM `suser_user` <include refid="querySql" />
+        SELECT <include refid="columns" /> FROM `common_user` <include refid="querySql" />
     </select>
 
     <select id="dynamicCount" resultType="java.lang.Integer">
-        SELECT COUNT(id) FROM `suser_user` <include refid="querySql" />
+        SELECT COUNT(id) FROM `common_user` <include refid="querySql" />
     </select>
 
     <update id="lock" parameterType="java.lang.Long">
-        SELECT id FROM `suser_user` WHERE `id` = #{id, jdbcType=BIGINT} FOR UPDATE
+        SELECT id FROM `common_user` WHERE `id` = #{id, jdbcType=BIGINT} FOR UPDATE
     </update>
 
     <sql id="querySql">
         <where>
             <if test="@Ognl@isNotEmpty(id)"> AND `id` = #{id, jdbcType=BIGINT} </if>
-            <if test="@Ognl@isNotEmpty(tenantId)"> AND `tenant_id` = #{tenantId, jdbcType=BIGINT} </if>
-            <if test="@Ognl@isNotEmpty(companyId)"> AND `company_id` = #{companyId, jdbcType=BIGINT} </if>
-            <if test="@Ognl@isNotEmpty(deptId)"> AND `dept_id` = #{deptId, jdbcType=BIGINT} </if>
-            <if test="@Ognl@isNotEmpty(type)"> AND `type` = #{type, jdbcType=TINYINT} </if>
+            <if test="@Ognl@isNotEmpty(loginUsername)"> AND `login_username` = #{loginUsername, jdbcType=VARCHAR} </if>
+            <if test="@Ognl@isNotEmpty(loginUsernameLike)"> AND `login_username` like #{loginUsernameLike, jdbcType=VARCHAR} </if>
+            <if test="@Ognl@isNotEmpty(loginPassword)"> AND `login_password` = #{loginPassword, jdbcType=VARCHAR} </if>
+            <if test="@Ognl@isNotEmpty(loginPasswordLike)"> AND `login_password` like #{loginPasswordLike, jdbcType=VARCHAR} </if>
+            <if test="@Ognl@isNotEmpty(openid)"> AND `openid` = #{openid, jdbcType=VARCHAR} </if>
+            <if test="@Ognl@isNotEmpty(openidLike)"> AND `openid` like #{openidLike, jdbcType=VARCHAR} </if>
             <if test="@Ognl@isNotEmpty(name)"> AND `name` = #{name, jdbcType=VARCHAR} </if>
             <if test="@Ognl@isNotEmpty(nameLike)"> AND `name` like #{nameLike, jdbcType=VARCHAR} </if>
-            <if test="@Ognl@isNotEmpty(realName)"> AND `real_name` = #{realName, jdbcType=VARCHAR} </if>
-            <if test="@Ognl@isNotEmpty(realNameLike)"> AND `real_name` like #{realNameLike, jdbcType=VARCHAR} </if>
-            <if test="@Ognl@isNotEmpty(lang)"> AND `lang` = #{lang, jdbcType=VARCHAR} </if>
-            <if test="@Ognl@isNotEmpty(langLike)"> AND `lang` like #{langLike, jdbcType=VARCHAR} </if>
-            <if test="@Ognl@isNotEmpty(email)"> AND `email` = #{email, jdbcType=VARCHAR} </if>
-            <if test="@Ognl@isNotEmpty(emailLike)"> AND `email` like #{emailLike, jdbcType=VARCHAR} </if>
-            <if test="@Ognl@isNotEmpty(password)"> AND `password` = #{password, jdbcType=VARCHAR} </if>
-            <if test="@Ognl@isNotEmpty(passwordLike)"> AND `password` like #{passwordLike, jdbcType=VARCHAR} </if>
+            <if test="@Ognl@isNotEmpty(phone)"> AND `phone` = #{phone, jdbcType=VARCHAR} </if>
+            <if test="@Ognl@isNotEmpty(phoneLike)"> AND `phone` like #{phoneLike, jdbcType=VARCHAR} </if>
+            <if test="@Ognl@isNotEmpty(userType)"> AND `user_type` = #{userType, jdbcType=SMALLINT} </if>
             <if test="@Ognl@isNotEmpty(status)"> AND `status` = #{status, jdbcType=TINYINT} </if>
-            <if test="@Ognl@isNotEmpty(gender)"> AND `gender` = #{gender, jdbcType=TINYINT} </if>
-            <if test="@Ognl@isNotEmpty(birthday)"> AND `birthday` = #{birthday, jdbcType=DATE} </if>
-            <if test="@Ognl@isNotEmpty(tel)"> AND `tel` = #{tel, jdbcType=VARCHAR} </if>
-            <if test="@Ognl@isNotEmpty(telLike)"> AND `tel` like #{telLike, jdbcType=VARCHAR} </if>
-            <if test="@Ognl@isNotEmpty(remark)"> AND `remark` = #{remark, jdbcType=LONGVARCHAR} </if>
-            <if test="@Ognl@isNotEmpty(loginErrorNum)"> AND `login_error_num` = #{loginErrorNum, jdbcType=INTEGER} </if>
-            <if test="@Ognl@isNotEmpty(verifyCode)"> AND `verify_code` = #{verifyCode, jdbcType=VARCHAR} </if>
-            <if test="@Ognl@isNotEmpty(verifyCodeLike)"> AND `verify_code` like #{verifyCodeLike, jdbcType=VARCHAR} </if>
             <if test="@Ognl@isNotEmpty(entryId)"> AND `entry_id` = #{entryId, jdbcType=BIGINT} </if>
             <if test="@Ognl@isNotEmpty(entryName)"> AND `entry_name` = #{entryName, jdbcType=VARCHAR} </if>
             <if test="@Ognl@isNotEmpty(entryNameLike)"> AND `entry_name` like #{entryNameLike, jdbcType=VARCHAR} </if>

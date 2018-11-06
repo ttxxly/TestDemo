@@ -1,10 +1,7 @@
 package com.skm.demo.service.impl;
 
-import com.skm.common.bean.dto.DataPrivilege;
 import com.skm.common.bean.dto.Page;
 import com.skm.common.bean.dto.UnifyUser;
-import com.skm.common.bean.exception.ApplicationException;
-import com.skm.common.bean.exception.ErrorCode;
 import com.skm.common.mybatis.config.ITransactional;
 import com.skm.common.mybatis.dto.BatchInsertParameter;
 import com.skm.demo.domain.UserBean;
@@ -18,9 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.Date;
 
-import static com.skm.demo.enums.DataPrivilegeCode.USER_UPDATE;
-
-@Service
+@Service("myUserServiceImpl")
 public class UserServiceImpl implements UserService {
 
     @Autowired

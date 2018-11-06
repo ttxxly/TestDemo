@@ -1,6 +1,7 @@
 package com.skm.demo;
 
 import com.skm.common.mybatis.config.MybatisConfiguration;
+import com.skm.common.spring.security.SecurityConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -13,8 +14,8 @@ import springfox.documentation.swagger2.configuration.Swagger2DocumentationConfi
 import java.util.Arrays;
 
 @SpringBootApplication
-@Import({MybatisConfiguration.class, Swagger2DocumentationConfiguration.class})
-@ComponentScan(basePackages = {"com.skm.common.spring", "com.skm.demo"})
+@Import({SecurityConfiguration.class, MybatisConfiguration.class, Swagger2DocumentationConfiguration.class})
+@ComponentScan(basePackages = {"com.skm.demo", "com.skm.common.spring", "com.skm.common.user"})
 public class Application {
     private static final Logger LOG = LoggerFactory.getLogger(Application.class);
 
