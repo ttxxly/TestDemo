@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
   *  <p>用户
   *
-  *  <p>作者: tractor
+  *  <p>作者: darklovy
   */
 public class UserBean extends BaseBean implements Serializable{
 	private static final long serialVersionUID = 1L;
