@@ -16,6 +16,7 @@
         <result column="update_id" jdbcType="BIGINT" property="updateId" />
         <result column="update_name" jdbcType="VARCHAR" property="updateName" />
         <result column="update_dt" jdbcType="TIMESTAMP" property="updateDt" />
+
     </resultMap>
 
     <sql id="columns">
