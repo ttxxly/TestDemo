@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,5 +53,10 @@ public class OrderController extends BaseController {
         int ps = pageParam.getPs();
 
         return Result.success();
+    }
+
+    private String getOrderNum(){
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");//设置日期格式
+        return df.format(new Date());
     }
 }

@@ -23,11 +23,4 @@ public class OrderDetailController extends BaseController {
 
         return Result.success();
     }
-
-    public Result<Page<UserVo>> update(@RequestBody PageParam<UserQueryVo> pageParam) {
-        int pn = pageParam.getPn();
-        int ps = pageParam.getPs();
-
-        return Result.success();
-    }
 }
