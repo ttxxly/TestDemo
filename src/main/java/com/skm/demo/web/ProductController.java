@@ -6,17 +6,30 @@ import com.skm.common.bean.dto.Result;
 import com.skm.common.bean.dto.UnifyUser;
 import com.skm.common.bean.utils.BeanMapper;
 import com.skm.common.spring.advisor.BaseController;
+import com.skm.demo.domain.ProductBean;
 import com.skm.demo.domain.UserBean;
 import com.skm.demo.persistence.qo.UserQO;
 import com.skm.demo.service.ProductService;
 import com.skm.demo.service.UserService;
+import com.skm.demo.web.vo.ProductSaveVo;
+import com.skm.demo.web.vo.ProductVo;
 import com.skm.demo.web.vo.UserQueryVo;
 import com.skm.demo.web.vo.UserVo;
+import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
+import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import java.io.*;
+import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,10 +56,52 @@ public class ProductController extends BaseController {
     }
 
     @PostMapping(value = "/add")
-    public Result<Page<UserVo>> add(@RequestBody PageParam<UserQueryVo> pageParam) {
-        int pn = pageParam.getPn();
-        int ps = pageParam.getPs();
+    public Result add(MultipartFile file) {
 
-        return Result.success();
+//        if (file.isEmpty()) {
+//            return "文件为空";
+//        }
+        try {
+            // Get the file and save it somewhere
+            InputStream inputStream = file.getInputStream();
+            StringBuilder sb = new StringBuilder();
+            String line;
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+            int count = 0;
+            ProductVo result = new ProductVo();
+            List<String> errorMsg = new ArrayList<>();
+            List<ProductSaveVo> psv = new ArrayList<>();
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+                count++;
+                String[] rsu = line.split(",");
+
+                //数据是否错误判断条件：是否获取到了三个属性
+                if (rsu.length != 3) {
+                    errorMsg.add("第" + count + "行 数据格式错误");
+                } else {
+                    //如果数据正确，保存到 ProductSaveVo list中
+                    ProductSaveVo saveVo = new ProductSaveVo();
+                    saveVo.setCode(rsu[0]);
+                    saveVo.setName(rsu[1]);
+                    saveVo.setPrice(new BigDecimal(rsu[2]));
+                    psv.add(saveVo);
+                }
+            }
+            System.out.println(sb.toString());
+            List<ProductBean> productBeans = new ArrayList<>();
+            //批量转化
+            for (int i=0; i<psv.size(); i++) {
+                productBeans.add(BeanMapper.map(psv.get(i), ProductBean.class));
+            }
+            ProductVo pvo = productService.add(productBeans);
+            //加上错误信息
+            pvo.setErrorMsg(errorMsg);
+            return Result.success(pvo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Result.error("500", "服务器错误");
     }
 }

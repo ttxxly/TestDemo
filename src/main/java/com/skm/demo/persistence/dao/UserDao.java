@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository("myUserDao")
 public interface UserDao extends BaseDao<UserBean> {
+
+
 }
