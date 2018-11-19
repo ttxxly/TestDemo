@@ -4,9 +4,9 @@ import com.skm.common.bean.dto.Page;
 import com.skm.common.bean.dto.UnifyUser;
 import com.skm.demo.domain.ProductBean;
 import com.skm.demo.domain.UserBean;
+import com.skm.demo.persistence.qo.ProductQo;
 import com.skm.demo.persistence.qo.UserQO;
-import com.skm.demo.web.vo.ProductSaveVo;
-import com.skm.demo.web.vo.ProductVo;
+import com.skm.demo.web.vo.ProductSaveResultVo;
 
 import java.util.List;
 
@@ -18,16 +18,15 @@ public interface ProductService {
      * @param qo 查询参数
      * @param ps 页大小
      * @param pn 页码
-     * @param optUser 操作用户
      * @return
      */
-    Page<UserBean> list(UserQO qo, int ps, int pn, UnifyUser optUser);
+    Page<ProductBean> list(ProductQo qo, int ps, int pn, UnifyUser optUser);
 
     /**
      * 批量新增商品信息
      * @param productBeans
      * @return
      */
-    ProductVo add(List<ProductBean> productBeans);
+    ProductSaveResultVo add(List<ProductBean> productBeans);
 
 }

@@ -8,27 +8,18 @@ import com.skm.common.bean.utils.BeanMapper;
 import com.skm.common.spring.advisor.BaseController;
 import com.skm.demo.domain.ProductBean;
 import com.skm.demo.domain.UserBean;
+import com.skm.demo.persistence.qo.ProductQo;
 import com.skm.demo.persistence.qo.UserQO;
 import com.skm.demo.service.ProductService;
-import com.skm.demo.service.UserService;
-import com.skm.demo.web.vo.ProductSaveVo;
-import com.skm.demo.web.vo.ProductVo;
-import com.skm.demo.web.vo.UserQueryVo;
-import com.skm.demo.web.vo.UserVo;
-import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
-import org.springframework.http.HttpRequest;
+import com.skm.demo.web.vo.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.io.*;
 import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,17 +31,27 @@ public class ProductController extends BaseController {
     private ProductService productService;
 
     @PostMapping(value = "/page")
-    public Result<Page<UserVo>> page(@RequestBody PageParam<UserQueryVo> pageParam) {
+    public Result<Page<ProductVo>> page(@RequestBody PageParam<ProductQueryVo> pageParam) {
         int pn = pageParam.getPn();
         int ps = pageParam.getPs();
+        UnifyUser currentUser = getCurrentUser();
 
-        return Result.success();
+        ProductQo productQo = Optional.of(pageParam.getConditions()).map(cond -> {
+            return BeanMapper.map(cond, ProductQo.class);
+        }).orElse(null);
+
+        Page<ProductBean> beanPage = productService.list(productQo, ps, pn, currentUser);
+
+        List<ProductVo> productVos = BeanMapper.mapList(beanPage.getDatas(), ProductBean.class, ProductVo.class);
+        Page<ProductVo> page = new Page<>(beanPage.getPn(), beanPage.getPs());
+        page.setTc(beanPage.getTc());
+        page.setDatas(productVos);
+
+        return Result.success(page);
     }
 
     @PostMapping(value = "/getAll")
-    public Result<Page<UserVo>> getAll(@RequestBody PageParam<UserQueryVo> pageParam) {
-        int pn = pageParam.getPn();
-        int ps = pageParam.getPs();
+    public Result<Page<UserVo>> getAll() {
 
         return Result.success();
     }
@@ -69,7 +70,7 @@ public class ProductController extends BaseController {
 
             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
             int count = 0;
-            ProductVo result = new ProductVo();
+            ProductSaveResultVo result = new ProductSaveResultVo();
             List<String> errorMsg = new ArrayList<>();
             List<ProductSaveVo> psv = new ArrayList<>();
             while ((line = br.readLine()) != null) {
@@ -95,7 +96,7 @@ public class ProductController extends BaseController {
             for (int i=0; i<psv.size(); i++) {
                 productBeans.add(BeanMapper.map(psv.get(i), ProductBean.class));
             }
-            ProductVo pvo = productService.add(productBeans);
+            ProductSaveResultVo pvo = productService.add(productBeans);
             //加上错误信息
             pvo.setErrorMsg(errorMsg);
             return Result.success(pvo);

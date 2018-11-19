@@ -6,14 +6,12 @@ import com.skm.common.mybatis.config.ITransactional;
 import com.skm.demo.domain.ProductBean;
 import com.skm.demo.domain.UserBean;
 import com.skm.demo.persistence.dao.ProductDao;
-import com.skm.demo.persistence.dao.UserDao;
+import com.skm.demo.persistence.qo.ProductQo;
 import com.skm.demo.persistence.qo.UserQO;
 import com.skm.demo.service.ProductService;
-import com.skm.demo.web.vo.ProductSaveVo;
-import com.skm.demo.web.vo.ProductVo;
+import com.skm.demo.web.vo.ProductSaveResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Date;
 import java.util.List;
 
 public class ProductServiceImpl implements ProductService {
@@ -23,13 +21,15 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public Page<UserBean> list(UserQO qo, int ps, int pn, UnifyUser optUser) {
+    public Page<ProductBean> list(ProductQo qo, int ps, int pn) {
+
+
         return null;
     }
 
     @Override
     @ITransactional
-    public ProductVo add(List<ProductBean> productBeans) {
+    public ProductSaveResultVo add(List<ProductBean> productBeans) {
 //        for (int i=0; i<productBeans.size(); i++) {
 //
 //            productBeans.get(i).setEntryDt(new Date());
@@ -41,12 +41,12 @@ public class ProductServiceImpl implements ProductService {
 //        }
         //影响行数
         int num = dao.BatchSave(productBeans);
-        ProductVo productVo = new ProductVo();
-        productVo.setUpdateNUm((long) num);
-        productVo.setSum((long) productBeans.size());
-        productVo.setSuccessMsg("导入成功：共导入"+productVo.getSum()
-                +"个商品，更新"+productVo.getUpdateNUm()+"个商品");
-        return productVo;
+        ProductSaveResultVo productSaveResultVo = new ProductSaveResultVo();
+        productSaveResultVo.setUpdateNUm((long) num);
+        productSaveResultVo.setSum((long) productBeans.size());
+        productSaveResultVo.setSuccessMsg("导入成功：共导入"+ productSaveResultVo.getSum()
+                +"个商品，更新"+ productSaveResultVo.getUpdateNUm()+"个商品");
+        return productSaveResultVo;
     }
 
 }
