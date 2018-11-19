@@ -8,6 +8,7 @@ import com.skm.common.bean.utils.BeanMapper;
 import com.skm.common.spring.advisor.BaseController;
 import com.skm.demo.domain.UserBean;
 import com.skm.demo.persistence.qo.UserQO;
+import com.skm.demo.service.OrderService;
 import com.skm.demo.web.vo.UserQueryVo;
 import com.skm.demo.web.vo.UserVo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,8 @@ import java.util.Optional;
 @RequestMapping("/web/v1/order")
 public class OrderController extends BaseController {
 
+    private OrderService orderService;
+
     @PostMapping(value = "/page")
     public Result<Page<UserVo>> page(@RequestBody PageParam<UserQueryVo> pageParam) {
         int pn = pageParam.getPn();
@@ -32,7 +35,7 @@ public class OrderController extends BaseController {
             return BeanMapper.map(cond, UserQO.class);
         }).orElse(null);
 
-        Page<UserBean> beanPage = userService.list(userQO, ps, pn, currentUser);
+        Page<UserBean> beanPage = orderService.list(userQO, ps, pn, currentUser);
 
         List<UserVo> userVos = BeanMapper.mapList(beanPage.getDatas(), UserBean.class, UserVo.class);
         Page<UserVo> page = new Page<>(beanPage.getPn(), beanPage.getPs());
