@@ -51,9 +51,13 @@ public class ProductController extends BaseController {
     }
 
     @PostMapping(value = "/getAll")
-    public Result<Page<UserVo>> getAll() {
+    public Result<List<ProductVo>> getAll() {
+        Result result = new Result();
+        List<ProductBean> productBeans = productService.getAll();
+        List<ProductVo> productVos= BeanMapper.mapList(productBeans, ProductBean.class, ProductVo.class);
 
-        return Result.success();
+        result.setContent(productVos);
+        return result;
     }
 
     @PostMapping(value = "/add")
@@ -91,11 +95,8 @@ public class ProductController extends BaseController {
                 }
             }
             System.out.println(sb.toString());
-            List<ProductBean> productBeans = new ArrayList<>();
             //批量转化
-            for (int i=0; i<psv.size(); i++) {
-                productBeans.add(BeanMapper.map(psv.get(i), ProductBean.class));
-            }
+            List<ProductBean> productBeans = BeanMapper.mapList(psv, ProductSaveVo.class, ProductBean.class);
             ProductSaveResultVo pvo = productService.add(productBeans);
             //加上错误信息
             pvo.setErrorMsg(errorMsg);

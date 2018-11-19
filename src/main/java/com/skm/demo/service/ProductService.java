@@ -7,6 +7,7 @@ import com.skm.demo.domain.UserBean;
 import com.skm.demo.persistence.qo.ProductQo;
 import com.skm.demo.persistence.qo.UserQO;
 import com.skm.demo.web.vo.ProductSaveResultVo;
+import com.skm.demo.web.vo.ProductSaveVo;
 
 import java.util.List;
 
@@ -29,4 +30,9 @@ public interface ProductService {
      */
     ProductSaveResultVo add(List<ProductBean> productBeans);
 
+    /**
+     * 获取所有的商品信息
+     * @return
+     */
+    List<ProductBean> getAll();
 }
