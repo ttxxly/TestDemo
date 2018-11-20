@@ -4,6 +4,7 @@ import com.skm.common.bean.dto.Page;
 import com.skm.common.bean.dto.UnifyUser;
 import com.skm.demo.domain.OrderBean;
 import com.skm.demo.domain.UserBean;
+import com.skm.demo.persistence.qo.OrderQo;
 import com.skm.demo.persistence.qo.UserQO;
 
 public interface OrderService {
@@ -16,7 +17,7 @@ public interface OrderService {
      * @param optUser 操作用户
      * @return
      */
-    Page<UserBean> list(UserQO qo, int ps, int pn, UnifyUser optUser);
+    Page<OrderBean> list(OrderQo qo, int ps, int pn, UnifyUser optUser);
 
     /**
      * 保存订单

@@ -6,9 +6,13 @@ import com.skm.common.bean.dto.Result;
 import com.skm.common.bean.dto.UnifyUser;
 import com.skm.common.bean.utils.BeanMapper;
 import com.skm.common.spring.advisor.BaseController;
+import com.skm.demo.domain.OrderBean;
 import com.skm.demo.domain.UserBean;
+import com.skm.demo.persistence.qo.OrderQo;
 import com.skm.demo.persistence.qo.UserQO;
 import com.skm.demo.service.OrderService;
+import com.skm.demo.web.vo.OrderQueryVo;
+import com.skm.demo.web.vo.OrderVo;
 import com.skm.demo.web.vo.UserQueryVo;
 import com.skm.demo.web.vo.UserVo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,27 +32,37 @@ public class OrderController extends BaseController {
 
     private OrderService orderService;
 
+    /**
+     * 查询订单
+     * @param pageParam
+     * @return
+     */
     @PostMapping(value = "/page")
-    public Result<Page<UserVo>> page(@RequestBody PageParam<UserQueryVo> pageParam) {
+    public Result<Page<OrderVo>> page(@RequestBody PageParam<OrderQueryVo> pageParam) {
         int pn = pageParam.getPn();
         int ps = pageParam.getPs();
         UnifyUser currentUser = getCurrentUser();
-        UserQO userQO = Optional.of(pageParam.getConditions()).map(cond -> {
-            return BeanMapper.map(cond, UserQO.class);
+        OrderQo orderQo = Optional.of(pageParam.getConditions()).map(cond -> {
+            return BeanMapper.map(cond, OrderQo.class);
         }).orElse(null);
 
-        Page<UserBean> beanPage = orderService.list(userQO, ps, pn, currentUser);
+        Page<OrderBean> beanPage = orderService.list(orderQo, ps, pn, currentUser);
 
-        List<UserVo> userVos = BeanMapper.mapList(beanPage.getDatas(), UserBean.class, UserVo.class);
-        Page<UserVo> page = new Page<>(beanPage.getPn(), beanPage.getPs());
+        List<OrderVo> orderVos = BeanMapper.mapList(beanPage.getDatas(), OrderBean.class, OrderVo.class);
+        Page<OrderVo> page = new Page<>(beanPage.getPn(), beanPage.getPs());
         page.setTc(beanPage.getTc());
-        page.setDatas(userVos);
+        page.setDatas(orderVos);
 
         return Result.success(page);
     }
 
+    /**
+     * 添加订单
+     * @param pageParam
+     * @return
+     */
     @PostMapping(value = "/add")
-    public Result<Page<UserVo>> add(@RequestBody PageParam<UserQueryVo> pageParam) {
+    public Result<Page<OrderVo>> add(@RequestBody PageParam<OrderQueryVo> pageParam) {
         int pn = pageParam.getPn();
         int ps = pageParam.getPs();
 

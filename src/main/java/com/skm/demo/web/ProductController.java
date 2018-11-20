@@ -62,10 +62,6 @@ public class ProductController extends BaseController {
 
     @PostMapping(value = "/add")
     public Result add(MultipartFile file) {
-
-//        if (file.isEmpty()) {
-//            return "文件为空";
-//        }
         try {
             // Get the file and save it somewhere
             InputStream inputStream = file.getInputStream();
@@ -97,8 +93,9 @@ public class ProductController extends BaseController {
             System.out.println(sb.toString());
             //批量转化
             List<ProductBean> productBeans = BeanMapper.mapList(psv, ProductSaveVo.class, ProductBean.class);
-            ProductSaveResultVo pvo = productService.add(productBeans);
+            int num = productService.batchSave(productBeans, getCurrentUser());
             //加上错误信息
+            ProductSaveResultVo pvo = new ProductSaveResultVo();
             pvo.setErrorMsg(errorMsg);
             return Result.success(pvo);
         } catch (Exception e) {

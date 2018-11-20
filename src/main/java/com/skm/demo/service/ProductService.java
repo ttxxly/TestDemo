@@ -28,7 +28,7 @@ public interface ProductService {
      * @param productBeans
      * @return
      */
-    ProductSaveResultVo add(List<ProductBean> productBeans);
+    Integer batchSave(List<ProductBean> productBeans, UnifyUser optUser);
 
     /**
      * 获取所有的商品信息
