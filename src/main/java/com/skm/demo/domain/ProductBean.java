@@ -29,7 +29,7 @@ public class ProductBean extends BaseBean {
     /**
      * 商品导入时间
      */
-    private Date import_dt;
+    private Date importDt;
 
     public Long getId() {
         return id;
@@ -63,27 +63,11 @@ public class ProductBean extends BaseBean {
         this.price = price;
     }
 
-    public Date getImport_dt() {
-        return import_dt;
+    public Date getImportDt() {
+        return importDt;
     }
 
-    public void setImport_dt(Date import_dt) {
-        this.import_dt = import_dt;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof ProductBean)) {
-            return false;
-        } else {
-            ProductBean p = (ProductBean)obj;
-            //System.out.println(this.name + "....equals..." + p.name);
-            return this.code.equals(p.code);
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        return this.getCode().hashCode();
+    public void setImportDt(Date importDt) {
+        this.importDt = importDt;
     }
 }

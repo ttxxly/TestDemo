@@ -1,6 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "classpath:com/skm/common/mybatis/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "classpath:com/skm/common/mybatis/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.skm.demo.persistence.dao.ProductDao">
+    <resultMap id="RM" type="com.skm.demo.domain.ProductBean">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="import_dt" jdbcType="VARCHAR" property="importDt"/>
+        <result column="entry_id" jdbcType="BIGINT" property="entryId"/>
+        <result column="entry_name" jdbcType="VARCHAR" property="entryName"/>
+        <result column="entry_dt" jdbcType="TIMESTAMP" property="entryDt"/>
+        <result column="update_id" jdbcType="BIGINT" property="updateId"/>
+        <result column="update_name" jdbcType="VARCHAR" property="updateName"/>
+        <result column="update_dt" jdbcType="TIMESTAMP" property="updateDt"/>
 
+    </resultMap>
+
+
+    <sql id="columns">
+        `id`,
+        `code`,
+        `name`,
+        `price`,
+        `import_dt`,
+        `entry_id`,
+        `entry_name`,
+        `entry_dt`,
+        `update_id`,
+        `update_name`,
+        `update_dt`
+    </sql>
+
+    <select id="getAllProduct" resultMap="RM">
+        SELECT * FROM `demo_product`
+    </select>
+
+    <insert id="batchProductSave" useGeneratedKeys="true"
+            parameterType="com.skm.common.mybatis.dto.BatchInsertParameter" keyProperty="id">
+        <![CDATA[
+               INSERT INTO `demo_product` (
+                    `code`,
+                    `name`,
+                    `price`,
+                    `import_dt`,
+                    `entry_id`,
+                    `entry_name`,
+                    `entry_dt`,
+                    `update_id`,
+                    `update_name`,
+                    `update_dt`
+                  )
+              VALUES (
+                    #{code, jdbcType=VARCHAR},
+                    #{name, jdbcType=VARCHAR},
+                    #{price, jdbcType=DECIMAL},
+                    #{importDt, jdbcType=TIMESTAMP},
+                    #{entryId, jdbcType=BIGINT},
+                    #{entryName, jdbcType=VARCHAR},
+                    #{entryDt, jdbcType=TIMESTAMP},
+                    #{updateId, jdbcType=BIGINT},
+                    #{updateName, jdbcType=VARCHAR},
+                    #{updateDt, jdbcType=TIMESTAMP}
+              )
+          ]]>
+    </insert>
+
+    <update id="batchProductUpdate" keyProperty="code" parameterType="com.skm.common.mybatis.dto.BatchUpdateParameter">
+        <![CDATA[
+            UPDATE `demo_product`
+                SET `code` = #{code, jdbcType=VARCHAR}
+                    , `name` = #{name, jdbcType=VARCHAR}
+                    , `price` = #{price, jdbcType=DECIMAL}
+                    , `update_id` = #{updateId, jdbcType=BIGINT}
+                    , `update_name` = #{updateName, jdbcType=VARCHAR}
+                    , `update_dt` = #{updateDt, jdbcType=TIMESTAMP}
+                WHERE code = #{code, jdbcType=VARCHAR}
+          ]]>
+    </update>
 
 </mapper>

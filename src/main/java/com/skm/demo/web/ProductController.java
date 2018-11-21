@@ -12,6 +12,7 @@ import com.skm.demo.persistence.qo.ProductQo;
 import com.skm.demo.persistence.qo.UserQO;
 import com.skm.demo.service.ProductService;
 import com.skm.demo.web.vo.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,8 +26,10 @@ import java.util.*;
 @RestController
 @RequestMapping("/web/v1/product")
 public class ProductController extends BaseController {
-
+    @Autowired
     private ProductService productService;
+    private int insertNum;
+    private int updateNum;
 
 
     @PostMapping(value = "/page")
@@ -49,11 +52,11 @@ public class ProductController extends BaseController {
         return Result.success(page);
     }
 
-    @PostMapping(value = "/getAll")
-    public Result<List<ProductVo>> getAll() {
+    @PostMapping(value = "/getAllProduct")
+    public Result<List<ProductVo>> getAllProduct() {
         Result result = new Result();
-        List<ProductBean> productBeans = productService.getAll();
-        List<ProductVo> productVos= BeanMapper.mapList(productBeans, ProductBean.class, ProductVo.class);
+        List<ProductBean> productBeans = productService.getAllProduct();
+        List<ProductVo> productVos = BeanMapper.mapList(productBeans, ProductBean.class, ProductVo.class);
 
         result.setContent(productVos);
         return result;
@@ -82,7 +85,7 @@ public class ProductController extends BaseController {
 
                 //数据是否错误判断条件：是否获取到了三个属性
                 if (rsu.length != 3) {
-                    errorMsg.add("第" + count + "行 数据格式错误");
+                    errorMsg.add("导入错误：第" + count + "行 数据格式错误");
                 } else {
                     //如果数据正确，保存到 ProductSaveVo list中
                     ProductSaveVo saveVo = new ProductSaveVo();
@@ -95,30 +98,42 @@ public class ProductController extends BaseController {
             System.out.println(sb.toString());
             //批量转化
             List<ProductBean> productBeans = BeanMapper.mapList(psv, ProductSaveVo.class, ProductBean.class);
-            List<ProductBean> allProduct = productService.getAll();
+            List<ProductBean> allProduct = productService.getAllProduct();
             List<ProductBean> insertBeans = new ArrayList<>();
             List<ProductBean> updateBeans = new ArrayList<>();
 
             HashMap<String, ProductBean> hashMap = new HashMap<>();
-            for (int i=0; i<allProduct.size(); i++) {
-                hashMap.put(allProduct.get(i).getCode(), allProduct.get(i));
-            }
-            for (int i=0; i<productBeans.size(); i++) {
-                if (hashMap.containsKey(productBeans.get(i).getCode())) {
-                    updateBeans.add(productBeans.get(i));
-                }else{
-                    insertBeans.add(productBeans.get(i));
+            if (allProduct.size() == 0) {
+                insertNum = productService.batchProductSave(productBeans, getCurrentUser());
+                insertNum = productBeans.size();
+                updateNum = 0;
+            } else {
+                for (int i = 0; i < allProduct.size(); i++) {
+                    hashMap.put(allProduct.get(i).getCode(), allProduct.get(i));
+                }
+                for (int i = 0; i < productBeans.size(); i++) {
+                    if (hashMap.containsKey(productBeans.get(i).getCode())) {
+                        updateBeans.add(productBeans.get(i));
+                    } else {
+                        insertBeans.add(productBeans.get(i));
+                    }
+                }
+
+                insertNum = insertBeans.size();
+                updateNum = updateBeans.size();
+                if (insertNum != 0) {
+                    productService.batchProductSave(insertBeans, getCurrentUser());
+                }
+                if (updateNum != 0) {
+                    productService.batchProductUpdate(updateBeans, getCurrentUser());
                 }
             }
-            //批量插入
-            int insertNum = productService.batchSave(insertBeans, getCurrentUser());
-            //批量更新
-            int updateNum = productService.batchUpdate(updateBeans, getCurrentUser());
+
             //定制返回结果
             pvo.setErrorMsg(errorMsg);
             pvo.setInsertSum(insertNum);
             pvo.setUpdateNum(updateNum);
-            pvo.setSuccessMsg("导入成功:共导入"+insertNum+"个商品,更新"+updateNum+"个商品");
+            pvo.setSuccessMsg("导入成功:共导入" + insertNum + "个商品,更新" + updateNum + "个商品");
         } catch (Exception e) {
             e.printStackTrace();
         }

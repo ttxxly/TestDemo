@@ -8,9 +8,11 @@ import com.skm.demo.persistence.qo.ProductQo;
 import com.skm.demo.persistence.qo.UserQO;
 import com.skm.demo.web.vo.ProductSaveResultVo;
 import com.skm.demo.web.vo.ProductSaveVo;
+import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.List;
-
+@Service
 public interface ProductService {
 
     /**
@@ -28,16 +30,16 @@ public interface ProductService {
      * @param productBeans
      * @return
      */
-    Integer batchSave(List<ProductBean> productBeans, UnifyUser optUser);
+    Integer batchProductSave(List<ProductBean> productBeans, UnifyUser optUser) throws ParseException;
 
     /**
      * 批量更新商品信息
      */
-    Integer batchUpdate(List<ProductBean> productBeans, UnifyUser optUser);
+    Integer batchProductUpdate(List<ProductBean> productBeans, UnifyUser optUser);
 
     /**
      * 获取所有的商品信息
      * @return
      */
-    List<ProductBean> getAll();
+    List<ProductBean> getAllProduct();
 }
