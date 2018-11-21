@@ -62,6 +62,7 @@ public class OrderController extends BaseController {
      * @return
      */
     @PostMapping(value = "/add")
+    //todo
     public Result<Page<OrderVo>> add(@RequestBody PageParam<OrderQueryVo> pageParam) {
         int pn = pageParam.getPn();
         int ps = pageParam.getPs();
@@ -69,7 +70,12 @@ public class OrderController extends BaseController {
         return Result.success();
     }
 
-    private String getOrderNum(){
+    /**
+     * 获取订单号
+     * @return
+     */
+    @PostMapping(value = "/getOrderNum")
+    public String getOrderNum(){
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");//设置日期格式
         return df.format(new Date());
     }

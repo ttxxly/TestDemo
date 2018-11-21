@@ -1,8 +1,10 @@
 package com.skm.demo.web.vo;
 
+import com.skm.demo.domain.OrderBean;
 import com.skm.demo.domain.OrderDetailBean;
 
 import java.util.Date;
+import java.util.List;
 
 public class OrderSaveVo {
 
@@ -41,20 +43,14 @@ public class OrderSaveVo {
      */
     private Date delivery_dt;
 
-    private OrderDetailBean bean;
+    private List<OrderBean> beans;
 
-    public OrderSaveVo() {
+    public List<OrderBean> getBeans() {
+        return beans;
     }
 
-    public OrderSaveVo(Long id, String no, String shipper_code, String provider_code, String provider_name, Date submit_dt, Date delivery_dt, OrderDetailBean bean) {
-        this.id = id;
-        this.no = no;
-        this.shipper_code = shipper_code;
-        this.provider_code = provider_code;
-        this.provider_name = provider_name;
-        this.submit_dt = submit_dt;
-        this.delivery_dt = delivery_dt;
-        this.bean = bean;
+    public void setBeans(List<OrderBean> beans) {
+        this.beans = beans;
     }
 
     public Long getId() {
@@ -111,13 +107,5 @@ public class OrderSaveVo {
 
     public void setDelivery_dt(Date delivery_dt) {
         this.delivery_dt = delivery_dt;
-    }
-
-    public OrderDetailBean getBean() {
-        return bean;
-    }
-
-    public void setBean(OrderDetailBean bean) {
-        this.bean = bean;
     }
 }

@@ -1,7 +1,7 @@
 package com.skm.demo.web.vo;
 
 import java.util.Date;
-
+// todo 缺少两个字段
 public class OrderVo {
 
     /**
@@ -38,6 +38,32 @@ public class OrderVo {
      * 到货日期
      */
     private Date delivery_dt;
+
+    /**
+     * 订购商品种类数量
+     */
+    private Long productTypeNum;
+
+    /**
+     * 商品总数量
+     */
+    private Long productNum;
+
+    public Long getProductTypeNum() {
+        return productTypeNum;
+    }
+
+    public void setProductTypeNum(Long productTypeNum) {
+        this.productTypeNum = productTypeNum;
+    }
+
+    public Long getProductNum() {
+        return productNum;
+    }
+
+    public void setProductNum(Long productNum) {
+        this.productNum = productNum;
+    }
 
     public OrderVo() {
     }
