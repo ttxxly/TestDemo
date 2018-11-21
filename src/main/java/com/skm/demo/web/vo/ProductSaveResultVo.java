@@ -7,8 +7,8 @@ public class ProductSaveResultVo implements Serializable {
 
     private List<String> errorMsg;
     private String successMsg;
-    private Long sum;
-    private Long updateNUm;
+    private Integer insertSum;
+    private Integer updateNum;
 
     public List<String> getErrorMsg() {
         return errorMsg;
@@ -26,24 +26,19 @@ public class ProductSaveResultVo implements Serializable {
         this.successMsg = successMsg;
     }
 
-    public Long getSum() {
-        return sum;
+    public Integer getInsertSum() {
+        return insertSum;
     }
 
-    public void setSum(Long sum) {
-        this.sum = sum;
+    public void setInsertSum(Integer insertSum) {
+        this.insertSum = insertSum;
     }
 
-    public Long getUpdateNUm() {
-        return updateNUm;
+    public Integer getUpdateNum() {
+        return updateNum;
     }
 
-    public void setUpdateNUm(Long updateNUm) {
-        this.updateNUm = updateNUm;
+    public void setUpdateNum(Integer updateNum) {
+        this.updateNum = updateNum;
     }
-
-    public ProductSaveResultVo() {
-    }
-
-
 }

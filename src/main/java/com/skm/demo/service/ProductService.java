@@ -31,6 +31,11 @@ public interface ProductService {
     Integer batchSave(List<ProductBean> productBeans, UnifyUser optUser);
 
     /**
+     * 批量更新商品信息
+     */
+    Integer batchUpdate(List<ProductBean> productBeans, UnifyUser optUser);
+
+    /**
      * 获取所有的商品信息
      * @return
      */

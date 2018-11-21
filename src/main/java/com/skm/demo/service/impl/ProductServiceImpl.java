@@ -44,12 +44,12 @@ public class ProductServiceImpl implements ProductService {
         }
         //影响行数
         int num = dao.BatchSave(productBeans);
-        ProductSaveResultVo productSaveResultVo = new ProductSaveResultVo();
-        productSaveResultVo.setUpdateNUm((long) num);
-        productSaveResultVo.setSum((long) productBeans.size());
-        productSaveResultVo.setSuccessMsg("导入成功：共导入"+ productSaveResultVo.getSum()
-                +"个商品，更新"+ productSaveResultVo.getUpdateNUm()+"个商品");
         return num;
+    }
+
+    @Override
+    public Integer batchUpdate(List<ProductBean> productBeans, UnifyUser optUser) {
+        return null;
     }
 
     @Override

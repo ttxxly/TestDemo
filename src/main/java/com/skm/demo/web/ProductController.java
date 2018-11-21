@@ -20,15 +20,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/web/v1/product")
 public class ProductController extends BaseController {
 
     private ProductService productService;
+
 
     @PostMapping(value = "/page")
     public Result<Page<ProductVo>> page(@RequestBody PageParam<ProductQueryVo> pageParam) {
@@ -62,6 +61,9 @@ public class ProductController extends BaseController {
 
     @PostMapping(value = "/add")
     public Result add(MultipartFile file) {
+        //返回结果对象
+        ProductSaveResultVo pvo = new ProductSaveResultVo();
+
         try {
             // Get the file and save it somewhere
             InputStream inputStream = file.getInputStream();
@@ -93,14 +95,33 @@ public class ProductController extends BaseController {
             System.out.println(sb.toString());
             //批量转化
             List<ProductBean> productBeans = BeanMapper.mapList(psv, ProductSaveVo.class, ProductBean.class);
-            int num = productService.batchSave(productBeans, getCurrentUser());
-            //加上错误信息
-            ProductSaveResultVo pvo = new ProductSaveResultVo();
+            List<ProductBean> allProduct = productService.getAll();
+            List<ProductBean> insertBeans = new ArrayList<>();
+            List<ProductBean> updateBeans = new ArrayList<>();
+
+            HashMap<String, ProductBean> hashMap = new HashMap<>();
+            for (int i=0; i<allProduct.size(); i++) {
+                hashMap.put(allProduct.get(i).getCode(), allProduct.get(i));
+            }
+            for (int i=0; i<productBeans.size(); i++) {
+                if (hashMap.containsKey(productBeans.get(i).getCode())) {
+                    updateBeans.add(productBeans.get(i));
+                }else{
+                    insertBeans.add(productBeans.get(i));
+                }
+            }
+            //批量插入
+            int insertNum = productService.batchSave(insertBeans, getCurrentUser());
+            //批量更新
+            int updateNum = productService.batchUpdate(updateBeans, getCurrentUser());
+            //定制返回结果
             pvo.setErrorMsg(errorMsg);
-            return Result.success(pvo);
+            pvo.setInsertSum(insertNum);
+            pvo.setUpdateNum(updateNum);
+            pvo.setSuccessMsg("导入成功:共导入"+insertNum+"个商品,更新"+updateNum+"个商品");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Result.error("500", "服务器错误");
+        return Result.success(pvo);
     }
 }

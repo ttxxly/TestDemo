@@ -71,25 +71,19 @@ public class ProductBean extends BaseBean {
         this.import_dt = import_dt;
     }
 
-    public ProductBean(Long id, String code, String name, double price, Date import_dt) {
-        this.id = id;
-        this.code = code;
-        this.name = name;
-        this.price = price;
-        this.import_dt = import_dt;
-    }
-
-    public ProductBean() {
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ProductBean)) {
+            return false;
+        } else {
+            ProductBean p = (ProductBean)obj;
+            //System.out.println(this.name + "....equals..." + p.name);
+            return this.code.equals(p.code);
+        }
     }
 
     @Override
-    public String toString() {
-        return "ProductBean{" +
-                "id=" + id +
-                ", code='" + code + '\'' +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", import_dt=" + import_dt +
-                '}';
+    public int hashCode() {
+        return this.getCode().hashCode();
     }
 }

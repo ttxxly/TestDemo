@@ -11,10 +11,7 @@ import com.skm.demo.domain.UserBean;
 import com.skm.demo.persistence.qo.OrderQo;
 import com.skm.demo.persistence.qo.UserQO;
 import com.skm.demo.service.OrderService;
-import com.skm.demo.web.vo.OrderQueryVo;
-import com.skm.demo.web.vo.OrderVo;
-import com.skm.demo.web.vo.UserQueryVo;
-import com.skm.demo.web.vo.UserVo;
+import com.skm.demo.web.vo.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,10 +59,8 @@ public class OrderController extends BaseController {
      * @return
      */
     @PostMapping(value = "/add")
-    //todo
-    public Result<Page<OrderVo>> add(@RequestBody PageParam<OrderQueryVo> pageParam) {
-        int pn = pageParam.getPn();
-        int ps = pageParam.getPs();
+    //
+    public Result<Page<OrderVo>> add(@RequestBody PageParam<OrderSaveVo> pageParam) {
 
         return Result.success();
     }
