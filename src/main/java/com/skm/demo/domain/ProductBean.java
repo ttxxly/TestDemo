@@ -1,5 +1,6 @@
 package com.skm.demo.domain;
 
+import com.google.common.hash.HashCode;
 import com.skm.common.bean.BaseBean;
 
 import java.util.Date;
@@ -69,5 +70,20 @@ public class ProductBean extends BaseBean {
 
     public void setImportDt(Date importDt) {
         this.importDt = importDt;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getCode().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ProductBean)) {
+            return false;
+        } else {
+            ProductBean p = (ProductBean)obj;
+            return this.code.equals(p.code);
+        }
     }
 }

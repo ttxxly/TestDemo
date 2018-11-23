@@ -2,5 +2,118 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "classpath:com/skm/common/mybatis/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.skm.demo.persistence.dao.OrderDao">
 
+    <resultMap id="RM" type="com.skm.demo.domain.OrderBean">
+        <result column="no" jdbcType="VARCHAR" property="no" />
+        <result column="shipper_code" jdbcType="VARCHAR" property="shipperCode" />
+        <result column="shipper_name" jdbcType="VARCHAR" property="shipperName" />
+        <result column="provider_code" jdbcType="VARCHAR" property="providerCode" />
+        <result column="provider_name" jdbcType="VARCHAR" property="providerName" />
+        <result column="submit_dt" jdbcType="TIMESTAMP" property="submitDt" />
+        <result column="delivery_dt" jdbcType="TIMESTAMP" property="deliveryDt" />
+    </resultMap>
 
+    <resultMap id="AllSum" type="com.skm.demo.web.vo.OrderTemp">
+        <result column="productTypeNum" jdbcType="BIGINT" property="productTypeNum" />
+        <result column="productNum" jdbcType="BIGINT" property="productNum" />
+    </resultMap>
+
+    <sql id="columns">
+        `no`,
+        `shipper_code`,
+        `shipper_name`,
+        `provider_code`,
+        `provider_name`,
+        `submit_dt`,
+        `delivery_dt`
+    </sql>
+
+    <select id="dynamicSelectOrder" resultMap="RM">
+        SELECT <include refid="columns" /> FROM `demo_order` <include refid="querySql" />
+    </select>
+
+    <sql id="querySql">
+            <where>
+                <if test="@Ognl@isNotEmpty(noLike)"> AND `no` like #{noLike, jdbcType=VARCHAR} </if>
+                <if test="@Ognl@isNotEmpty(shipperCodeLike)"> AND `shipper_code` like #{shipperCodeLike, jdbcType=VARCHAR} </if>
+                <if test="@Ognl@isNotEmpty(providerCodeLike)"> AND `provider_code` like #{providerCodeLike, jdbcType=VARCHAR} </if>
+                <if test="@Ognl@isNotEmpty(startSubmitTime)"> AND `submit_dt` &lt;= #{startSubmitTime, jdbcType=TIMESTAMP} </if>
+                <if test="@Ognl@isNotEmpty(endSubmitTime)"> AND `submit_dt` &gt;= #{endSubmitTime, jdbcType=TIMESTAMP} </if>
+            </where>
+    </sql>
+
+    <insert id="saveOrder" useGeneratedKeys="true" keyProperty="id">
+        <![CDATA[
+             INSERT INTO `demo_order` (
+                  `no`,
+                  `shipper_code`,
+                  `shipper_name`,
+                  `provider_code`,
+                  `provider_name`,
+                  `submit_dt`,
+                  `delivery_dt`,
+                  `entry_id`,
+                  `entry_name`,
+                  `entry_dt`,
+                  `update_id`,
+                  `update_name`,
+                  `update_dt`
+                )
+            VALUES (
+                  #{no, jdbcType=VARCHAR},
+                  #{shipperCode, jdbcType=VARCHAR},
+                  #{shipperName, jdbcType=VARCHAR},
+                  #{providerCode, jdbcType=VARCHAR},
+                  #{providerName, jdbcType=VARCHAR},
+                  #{submitDt, jdbcType=TIMESTAMP},
+                  #{deliveryDt, jdbcType=TIMESTAMP},
+                  #{entryId, jdbcType=BIGINT},
+                  #{entryName, jdbcType=VARCHAR},
+                  #{entryDt, jdbcType=TIMESTAMP},
+                  #{updateId, jdbcType=BIGINT},
+                  #{updateName, jdbcType=VARCHAR},
+                  #{updateDt, jdbcType=TIMESTAMP}
+            )
+        ]]>
+    </insert>
+
+    <insert id="batchSaveOrderDetails" useGeneratedKeys="true"
+            parameterType="com.skm.common.mybatis.dto.BatchInsertParameter" keyProperty="id">
+        <![CDATA[
+               INSERT INTO `demo_order_detail` (
+                    `order_no`,
+                    `product_code`,
+                    `product_name`,
+                    `amount`,
+                    `entry_id`,
+                    `entry_name`,
+                    `entry_dt`,
+                    `update_id`,
+                    `update_name`,
+                    `update_dt`
+                  )
+              VALUES (
+                    #{orderNo, jdbcType=VARCHAR},
+                    #{productCode, jdbcType=VARCHAR},
+                    #{productName, jdbcType=VARCHAR},
+                    #{amount, jdbcType=BIGINT},
+                    #{entryId, jdbcType=BIGINT},
+                    #{entryName, jdbcType=VARCHAR},
+                    #{entryDt, jdbcType=TIMESTAMP},
+                    #{updateId, jdbcType=BIGINT},
+                    #{updateName, jdbcType=VARCHAR},
+                    #{updateDt, jdbcType=TIMESTAMP}
+              )
+          ]]>
+    </insert>
+
+    <select id="getProductTypeNumAndProductNumByNo" resultMap="AllSum">
+        SELECT
+        COUNT(order_no) as productTypeNum,
+        SUM(num) as productNum
+        FROM
+            demo_order_detail
+        <where>
+            <if test="@Ognl@isNotEmpty(no)"> AND `order_no` = #{no, jdbcType=VARCHAR} </if>
+        </where>
+    </select>
 </mapper>

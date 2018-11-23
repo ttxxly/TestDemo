@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-@Service
+@Service("myProductServiceImpl")
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
@@ -31,7 +31,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @ITransactional
     public Page<ProductBean> list(ProductQo qo, int ps, int pn, UnifyUser optUser) {
-        return null;
+        Page<ProductBean> page = new Page<>();
+        page.setConditions(qo);
+        page.setPn(pn);
+        page.setPs(ps);
+        dao.productDynamicSelectPage(page);
+
+        return page;
     }
 
     @Override

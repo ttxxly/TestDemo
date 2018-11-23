@@ -5,11 +5,6 @@ import java.util.Date;
 public class OrderVo {
 
     /**
-     * 主键id
-     */
-    private Long id;
-
-    /**
      * 采购单号
      */
     private String no;
@@ -18,6 +13,11 @@ public class OrderVo {
      * 货主编码
      */
     private String shipper_code;
+
+    /**
+     * 货主名称
+     */
+    private String shipper_name;
 
     /**
      * 供货商编码
@@ -49,33 +49,6 @@ public class OrderVo {
      */
     private Long productNum;
 
-    public Long getProductTypeNum() {
-        return productTypeNum;
-    }
-
-    public void setProductTypeNum(Long productTypeNum) {
-        this.productTypeNum = productTypeNum;
-    }
-
-    public Long getProductNum() {
-        return productNum;
-    }
-
-    public void setProductNum(Long productNum) {
-        this.productNum = productNum;
-    }
-
-    public OrderVo() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getNo() {
         return no;
     }
@@ -90,6 +63,14 @@ public class OrderVo {
 
     public void setShipper_code(String shipper_code) {
         this.shipper_code = shipper_code;
+    }
+
+    public String getShipper_name() {
+        return shipper_name;
+    }
+
+    public void setShipper_name(String shipper_name) {
+        this.shipper_name = shipper_name;
     }
 
     public String getProvider_code() {
@@ -122,5 +103,21 @@ public class OrderVo {
 
     public void setDelivery_dt(Date delivery_dt) {
         this.delivery_dt = delivery_dt;
+    }
+
+    public Long getProductTypeNum() {
+        return productTypeNum;
+    }
+
+    public void setProductTypeNum(Long productTypeNum) {
+        this.productTypeNum = productTypeNum;
+    }
+
+    public Long getProductNum() {
+        return productNum;
+    }
+
+    public void setProductNum(Long productNum) {
+        this.productNum = productNum;
     }
 }

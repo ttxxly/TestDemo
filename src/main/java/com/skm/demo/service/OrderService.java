@@ -4,8 +4,10 @@ import com.skm.common.bean.dto.Page;
 import com.skm.common.bean.dto.UnifyUser;
 import com.skm.demo.domain.OrderBean;
 import com.skm.demo.domain.UserBean;
+import com.skm.demo.persistence.DTO.OrderDTO;
 import com.skm.demo.persistence.qo.OrderQo;
 import com.skm.demo.persistence.qo.UserQO;
+import com.skm.demo.web.vo.OrderTemp;
 
 public interface OrderService {
     /**
@@ -21,9 +23,14 @@ public interface OrderService {
 
     /**
      * 保存订单
-     * @param bean 订单实例
+     * @param orderDTO
      * @param optUser 操作者
      * @return
      */
-    OrderBean save(OrderBean bean, UnifyUser optUser);
+    OrderBean save(OrderDTO orderDTO, UnifyUser optUser);
+
+    /**
+     * 获取指定订单号下的 商品种类数量和总数量
+     */
+    OrderTemp getProductTypeNumAndProductNumByNo(String no);
 }

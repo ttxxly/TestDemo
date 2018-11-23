@@ -20,53 +20,32 @@ public class OrderBean extends BaseBean {
     /**
      * 货主编码
      */
-    private String shipper_code;
+    private String shipperCode;
+
+    /**
+     * 货主编码
+     */
+    private String shipperName;
 
     /**
      * 供货商编码
      */
-    private String provider_code;
+    private String providerCode;
 
     /**
      * 供货商名称
      */
-    private String provider_name;
+    private String providerName;
 
     /**
      * 订单提交时间
      */
-    private Date submit_dt;
+    private Date submitDt;
 
     /**
      * 到货日期
      */
-    private Date delivery_dt;
-
-    public OrderBean() {
-    }
-
-    public OrderBean(Long id, String no, String shipper_code, String provider_code, String provider_name, Date submit_dt, Date delivery_dt) {
-        this.id = id;
-        this.no = no;
-        this.shipper_code = shipper_code;
-        this.provider_code = provider_code;
-        this.provider_name = provider_name;
-        this.submit_dt = submit_dt;
-        this.delivery_dt = delivery_dt;
-    }
-
-    @Override
-    public String toString() {
-        return "OrderBean{" +
-                "id=" + id +
-                ", no='" + no + '\'' +
-                ", shipper_code='" + shipper_code + '\'' +
-                ", provider_code='" + provider_code + '\'' +
-                ", provider_name='" + provider_name + '\'' +
-                ", submit_dt=" + submit_dt +
-                ", delivery_dt=" + delivery_dt +
-                '}';
-    }
+    private Date deliveryDt;
 
     public Long getId() {
         return id;
@@ -84,43 +63,51 @@ public class OrderBean extends BaseBean {
         this.no = no;
     }
 
-    public String getShipper_code() {
-        return shipper_code;
+    public String getShipperCode() {
+        return shipperCode;
     }
 
-    public void setShipper_code(String shipper_code) {
-        this.shipper_code = shipper_code;
+    public void setShipperCode(String shipperCode) {
+        this.shipperCode = shipperCode;
     }
 
-    public String getProvider_code() {
-        return provider_code;
+    public String getShipperName() {
+        return shipperName;
     }
 
-    public void setProvider_code(String provider_code) {
-        this.provider_code = provider_code;
+    public void setShipperName(String shipperName) {
+        this.shipperName = shipperName;
     }
 
-    public String getProvider_name() {
-        return provider_name;
+    public String getProviderCode() {
+        return providerCode;
     }
 
-    public void setProvider_name(String provider_name) {
-        this.provider_name = provider_name;
+    public void setProviderCode(String providerCode) {
+        this.providerCode = providerCode;
     }
 
-    public Date getSubmit_dt() {
-        return submit_dt;
+    public String getProviderName() {
+        return providerName;
     }
 
-    public void setSubmit_dt(Date submit_dt) {
-        this.submit_dt = submit_dt;
+    public void setProviderName(String providerName) {
+        this.providerName = providerName;
     }
 
-    public Date getDelivery_dt() {
-        return delivery_dt;
+    public Date getSubmitDt() {
+        return submitDt;
     }
 
-    public void setDelivery_dt(Date delivery_dt) {
-        this.delivery_dt = delivery_dt;
+    public void setSubmitDt(Date submitDt) {
+        this.submitDt = submitDt;
+    }
+
+    public Date getDeliveryDt() {
+        return deliveryDt;
+    }
+
+    public void setDeliveryDt(Date deliveryDt) {
+        this.deliveryDt = deliveryDt;
     }
 }

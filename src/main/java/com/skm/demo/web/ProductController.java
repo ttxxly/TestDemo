@@ -12,6 +12,7 @@ import com.skm.demo.persistence.qo.ProductQo;
 import com.skm.demo.persistence.qo.UserQO;
 import com.skm.demo.service.ProductService;
 import com.skm.demo.web.vo.*;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,8 +29,6 @@ import java.util.*;
 public class ProductController extends BaseController {
     @Autowired
     private ProductService productService;
-    private int insertNum;
-    private int updateNum;
 
 
     @PostMapping(value = "/page")
@@ -64,6 +63,10 @@ public class ProductController extends BaseController {
 
     @PostMapping(value = "/add")
     public Result add(MultipartFile file) {
+
+        int insertNum;
+        int updateNum;
+
         //返回结果对象
         ProductSaveResultVo pvo = new ProductSaveResultVo();
 
@@ -73,7 +76,7 @@ public class ProductController extends BaseController {
             StringBuilder sb = new StringBuilder();
             String line;
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
             int count = 0;
             ProductSaveResultVo result = new ProductSaveResultVo();
             List<String> errorMsg = new ArrayList<>();
@@ -95,9 +98,25 @@ public class ProductController extends BaseController {
                     psv.add(saveVo);
                 }
             }
+            inputStream.close();
             System.out.println(sb.toString());
             //批量转化
             List<ProductBean> productBeans = BeanMapper.mapList(psv, ProductSaveVo.class, ProductBean.class);
+            //自身去重
+            HashSet<ProductBean> hashSet = new HashSet<>();
+            //记录重复的key
+            List<ProductBean> codeList = new ArrayList<>();
+            for (int i=0; i<productBeans.size(); i++) {
+                if (!hashSet.add(productBeans.get(i))) {
+                    codeList.add(productBeans.get(i));
+                }
+            }
+            productBeans.clear();
+            productBeans.addAll(hashSet);
+            for (int i=0; i<codeList.size(); i++) {
+                productBeans.remove(codeList.get(i));
+                errorMsg.add("导入重复，不予读取：重复的编码值为" + codeList.get(i).getCode() );
+            }
             List<ProductBean> allProduct = productService.getAllProduct();
             List<ProductBean> insertBeans = new ArrayList<>();
             List<ProductBean> updateBeans = new ArrayList<>();

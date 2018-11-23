@@ -79,4 +79,15 @@
           ]]>
     </update>
 
+    <select id="productDynamicSelectPage"  resultMap="RM">
+        SELECT <include refid="columns" /> FROM `demo_product` <include refid="querySql" />
+    </select>
+
+    <sql id="querySql">
+        <where>
+            <if test="@Ognl@isNotEmpty(name)"> AND `name` like #{name, jdbcType=VARCHAR} </if>
+            <if test="@Ognl@isNotEmpty(code)"> AND `code` like #{code, jdbcType=VARCHAR} </if>
+        </where>
+    </sql>
+
 </mapper>

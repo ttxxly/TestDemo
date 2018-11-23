@@ -25,7 +25,7 @@ public class ProductVo {
     /**
      * 商品导入时间
      */
-    private Date import_dt;
+    private Date importDt;
 
     public Long getId() {
         return id;
@@ -59,33 +59,11 @@ public class ProductVo {
         this.price = price;
     }
 
-    public Date getImport_dt() {
-        return import_dt;
+    public Date getImportDt() {
+        return importDt;
     }
 
-    public void setImport_dt(Date import_dt) {
-        this.import_dt = import_dt;
-    }
-
-    @Override
-    public String toString() {
-        return "ProductBean{" +
-                "id=" + id +
-                ", code='" + code + '\'' +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", import_dt=" + import_dt +
-                '}';
-    }
-
-    public ProductVo() {
-    }
-
-    public ProductVo(Long id, String code, String name, double price, Date import_dt) {
-        this.id = id;
-        this.code = code;
-        this.name = name;
-        this.price = price;
-        this.import_dt = import_dt;
+    public void setImportDt(Date importDt) {
+        this.importDt = importDt;
     }
 }

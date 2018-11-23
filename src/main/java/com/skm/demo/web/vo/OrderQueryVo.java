@@ -4,22 +4,23 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
-@ApiModel(value="订单表查询对象")
+
 public class OrderQueryVo {
     /**
-     * 采购单号
+     * 查询条件：采购单号
      */
-    @ApiModelProperty(value = "采购单号")
-    private String no;
-    /**
-     * 货主编码
-     */
-    private String shipper_code;
+    private String noLike;
 
     /**
-     * 供货商编码
+     * 查询条件：货主编码
      */
-    private String provider_code;
+    private String shipperCodeLike;
+
+    /**
+     * 查询条件：供应商编码
+     */
+    private String providerCodeLike;
+
     /**
      * 查询条件：开始提交时间
      */
@@ -30,28 +31,28 @@ public class OrderQueryVo {
      */
     private Date endSubmitTime;
 
-    public String getNo() {
-        return no;
+    public String getNoLike() {
+        return noLike;
     }
 
-    public void setNo(String no) {
-        this.no = no;
+    public void setNoLike(String noLike) {
+        this.noLike = noLike;
     }
 
-    public String getShipper_code() {
-        return shipper_code;
+    public String getShipperCodeLike() {
+        return shipperCodeLike;
     }
 
-    public void setShipper_code(String shipper_code) {
-        this.shipper_code = shipper_code;
+    public void setShipperCodeLike(String shipperCodeLike) {
+        this.shipperCodeLike = shipperCodeLike;
     }
 
-    public String getProvider_code() {
-        return provider_code;
+    public String getProviderCodeLike() {
+        return providerCodeLike;
     }
 
-    public void setProvider_code(String provider_code) {
-        this.provider_code = provider_code;
+    public void setProviderCodeLike(String providerCodeLike) {
+        this.providerCodeLike = providerCodeLike;
     }
 
     public Date getStartSubmitTime() {

@@ -3,63 +3,46 @@ package com.skm.demo.web.vo;
 import com.skm.demo.domain.OrderBean;
 import com.skm.demo.domain.OrderDetailBean;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
 public class OrderSaveVo {
 
     /**
-     * 主键id
-     */
-    private Long id;
-
-    /**
      * 采购单号
      */
+    @NotNull
     private String no;
 
     /**
      * 货主编码
      */
-    private String shipper_code;
+    @NotNull
+    private String shipperCode;
 
     /**
      * 供货商编码
      */
-    private String provider_code;
+    @NotNull
+    private String providerCode;
 
     /**
      * 供货商名称
      */
-    private String provider_name;
+    private String providerName;
 
     /**
      * 订单提交时间
      */
-    private Date submit_dt;
+    private Date submitDt;
 
     /**
      * 到货日期
      */
-    private Date delivery_dt;
+    private Date deliveryDt;
 
-    private List<OrderBean> beans;
-
-    public List<OrderBean> getBeans() {
-        return beans;
-    }
-
-    public void setBeans(List<OrderBean> beans) {
-        this.beans = beans;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private List<OrderDetailSaveVo> beans;
 
     public String getNo() {
         return no;
@@ -69,43 +52,51 @@ public class OrderSaveVo {
         this.no = no;
     }
 
-    public String getShipper_code() {
-        return shipper_code;
+    public String getShipperCode() {
+        return shipperCode;
     }
 
-    public void setShipper_code(String shipper_code) {
-        this.shipper_code = shipper_code;
+    public void setShipperCode(String shipperCode) {
+        this.shipperCode = shipperCode;
     }
 
-    public String getProvider_code() {
-        return provider_code;
+    public String getProviderCode() {
+        return providerCode;
     }
 
-    public void setProvider_code(String provider_code) {
-        this.provider_code = provider_code;
+    public void setProviderCode(String providerCode) {
+        this.providerCode = providerCode;
     }
 
-    public String getProvider_name() {
-        return provider_name;
+    public String getProviderName() {
+        return providerName;
     }
 
-    public void setProvider_name(String provider_name) {
-        this.provider_name = provider_name;
+    public void setProviderName(String providerName) {
+        this.providerName = providerName;
     }
 
-    public Date getSubmit_dt() {
-        return submit_dt;
+    public Date getSubmitDt() {
+        return submitDt;
     }
 
-    public void setSubmit_dt(Date submit_dt) {
-        this.submit_dt = submit_dt;
+    public void setSubmitDt(Date submitDt) {
+        this.submitDt = submitDt;
     }
 
-    public Date getDelivery_dt() {
-        return delivery_dt;
+    public Date getDeliveryDt() {
+        return deliveryDt;
     }
 
-    public void setDelivery_dt(Date delivery_dt) {
-        this.delivery_dt = delivery_dt;
+    public void setDeliveryDt(Date deliveryDt) {
+        this.deliveryDt = deliveryDt;
+    }
+
+    public List<OrderDetailSaveVo> getBeans() {
+        return beans;
+    }
+
+    public void setBeans(List<OrderDetailSaveVo> beans) {
+        this.beans = beans;
     }
 }

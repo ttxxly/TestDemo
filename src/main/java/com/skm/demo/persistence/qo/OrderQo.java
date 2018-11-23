@@ -3,6 +3,7 @@ package com.skm.demo.persistence.qo;
 import com.skm.common.bean.dto.*;
 import com.skm.demo.domain.OrderBean;
 import com.skm.demo.domain.ProductBean;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 import java.util.List;
@@ -10,6 +11,11 @@ import java.util.List;
 public class OrderQo extends OrderBean implements Sortable, Operable {
 
     private static final long serialVersionUID = -1L;
+
+    /**
+     * 查询条件：采购单号
+     */
+    private String noLike;
 
     /**
      * 查询条件：货主编码
@@ -24,44 +30,28 @@ public class OrderQo extends OrderBean implements Sortable, Operable {
     /**
      * 查询条件：开始提交时间
      */
-    private Date startSubmitTimeLike;
+    private Date startSubmitTime;
 
     /**
      * 查询条件：结束提交时间
      */
-    private Date endSubmitTimeLike;
+    private Date endSubmitTime;
 
     private List<Long> ids;
     private SortParam sortParam = new SortParam();
     private List<OperatorFilter> operatorFilters;
     private List<List<OperatorFilter>> orOperatorFilters;
 
-
-    public OrderQo(String shipperCodeLike, String providerCodeLike, Date startSubmitTimeLike, Date endSubmitTimeLike, List<Long> ids, SortParam sortParam, List<OperatorFilter> operatorFilters, List<List<OperatorFilter>> orOperatorFilters) {
-        this.shipperCodeLike = shipperCodeLike;
-        this.providerCodeLike = providerCodeLike;
-        this.startSubmitTimeLike = startSubmitTimeLike;
-        this.endSubmitTimeLike = endSubmitTimeLike;
-        this.ids = ids;
-        this.sortParam = sortParam;
-        this.operatorFilters = operatorFilters;
-        this.orOperatorFilters = orOperatorFilters;
-    }
-
-    public OrderQo(Long id, String no, String shipper_code, String provider_code, String provider_name, Date submit_dt, Date delivery_dt, String shipperCodeLike, String providerCodeLike, Date startSubmitTimeLike, Date endSubmitTimeLike, List<Long> ids, SortParam sortParam, List<OperatorFilter> operatorFilters, List<List<OperatorFilter>> orOperatorFilters) {
-        super(id, no, shipper_code, provider_code, provider_name, submit_dt, delivery_dt);
-        this.shipperCodeLike = shipperCodeLike;
-        this.providerCodeLike = providerCodeLike;
-        this.startSubmitTimeLike = startSubmitTimeLike;
-        this.endSubmitTimeLike = endSubmitTimeLike;
-        this.ids = ids;
-        this.sortParam = sortParam;
-        this.operatorFilters = operatorFilters;
-        this.orOperatorFilters = orOperatorFilters;
-    }
-
     public static long getSerialVersionUID() {
         return serialVersionUID;
+    }
+
+    public String getNoLike() {
+        return noLike;
+    }
+
+    public void setNoLike(String noLike) {
+        this.noLike = noLike;
     }
 
     public String getShipperCodeLike() {
@@ -80,20 +70,20 @@ public class OrderQo extends OrderBean implements Sortable, Operable {
         this.providerCodeLike = providerCodeLike;
     }
 
-    public Date getStartSubmitTimeLike() {
-        return startSubmitTimeLike;
+    public Date getStartSubmitTime() {
+        return startSubmitTime;
     }
 
-    public void setStartSubmitTimeLike(Date startSubmitTimeLike) {
-        this.startSubmitTimeLike = startSubmitTimeLike;
+    public void setStartSubmitTime(Date startSubmitTime) {
+        this.startSubmitTime = startSubmitTime;
     }
 
-    public Date getEndSubmitTimeLike() {
-        return endSubmitTimeLike;
+    public Date getEndSubmitTime() {
+        return endSubmitTime;
     }
 
-    public void setEndSubmitTimeLike(Date endSubmitTimeLike) {
-        this.endSubmitTimeLike = endSubmitTimeLike;
+    public void setEndSubmitTime(Date endSubmitTime) {
+        this.endSubmitTime = endSubmitTime;
     }
 
     public List<Long> getIds() {
