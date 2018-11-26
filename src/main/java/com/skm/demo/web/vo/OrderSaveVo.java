@@ -22,6 +22,12 @@ public class OrderSaveVo {
     private String shipperCode;
 
     /**
+     * 货主名称
+     */
+    @NotNull
+    private String shipperName;
+
+    /**
      * 供货商编码
      */
     @NotNull
@@ -98,5 +104,13 @@ public class OrderSaveVo {
 
     public void setBeans(List<OrderDetailSaveVo> beans) {
         this.beans = beans;
+    }
+
+    public String getShipperName() {
+        return shipperName;
+    }
+
+    public void setShipperName(String shipperName) {
+        this.shipperName = shipperName;
     }
 }

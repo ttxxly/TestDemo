@@ -16,13 +16,13 @@ public interface ProductDao<T> extends BaseDao<ProductBean> {
 
     int batchProductUpdate(BatchInsertParameter<T> entity);
 
-    List<ProductSaveVo> getAllProduct();
+    List<ProductBean> getAllProduct();
 
     /**
      * 分页查询，查询后数据会直接存储在page参数的datas中，同时填写上分页数据
      *
-     * @param page
-     * @return
+     * @param page 分页查询对象
+     * @return 结果集
      */
     List<T> productDynamicSelectPage(Page<T> page);
 }

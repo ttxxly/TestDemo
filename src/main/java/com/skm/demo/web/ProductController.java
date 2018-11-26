@@ -7,12 +7,9 @@ import com.skm.common.bean.dto.UnifyUser;
 import com.skm.common.bean.utils.BeanMapper;
 import com.skm.common.spring.advisor.BaseController;
 import com.skm.demo.domain.ProductBean;
-import com.skm.demo.domain.UserBean;
 import com.skm.demo.persistence.qo.ProductQo;
-import com.skm.demo.persistence.qo.UserQO;
 import com.skm.demo.service.ProductService;
 import com.skm.demo.web.vo.*;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,24 +19,32 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @RestController
 @RequestMapping("/web/v1/product")
 public class ProductController extends BaseController {
-    @Autowired
+
     private ProductService productService;
 
+    @Autowired
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @PostMapping(value = "/page")
     public Result<Page<ProductVo>> page(@RequestBody PageParam<ProductQueryVo> pageParam) {
         int pn = pageParam.getPn();
         int ps = pageParam.getPs();
+        if (pn == 0 || ps == 0) {
+            return Result.error("", "页码或行数不能为零哦");
+        }
         UnifyUser currentUser = getCurrentUser();
 
-        ProductQo productQo = Optional.of(pageParam.getConditions()).map(cond -> {
-            return BeanMapper.map(cond, ProductQo.class);
-        }).orElse(null);
+        ProductQo productQo = Optional.of(pageParam.getConditions())
+                .map(cond -> BeanMapper.map(cond, ProductQo.class))
+                .orElse(null);
 
         Page<ProductBean> beanPage = productService.list(productQo, ps, pn, currentUser);
 
@@ -53,12 +58,10 @@ public class ProductController extends BaseController {
 
     @PostMapping(value = "/getAllProduct")
     public Result<List<ProductVo>> getAllProduct() {
-        Result result = new Result();
         List<ProductBean> productBeans = productService.getAllProduct();
         List<ProductVo> productVos = BeanMapper.mapList(productBeans, ProductBean.class, ProductVo.class);
 
-        result.setContent(productVos);
-        return result;
+        return Result.success(productVos);
     }
 
     @PostMapping(value = "/add")
@@ -76,7 +79,7 @@ public class ProductController extends BaseController {
             StringBuilder sb = new StringBuilder();
             String line;
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
             int count = 0;
             ProductSaveResultVo result = new ProductSaveResultVo();
             List<String> errorMsg = new ArrayList<>();
@@ -106,16 +109,16 @@ public class ProductController extends BaseController {
             HashSet<ProductBean> hashSet = new HashSet<>();
             //记录重复的key
             List<ProductBean> codeList = new ArrayList<>();
-            for (int i=0; i<productBeans.size(); i++) {
-                if (!hashSet.add(productBeans.get(i))) {
-                    codeList.add(productBeans.get(i));
+            for (ProductBean productBean : productBeans) {
+                if (!hashSet.add(productBean)) {
+                    codeList.add(productBean);
                 }
             }
             productBeans.clear();
             productBeans.addAll(hashSet);
-            for (int i=0; i<codeList.size(); i++) {
-                productBeans.remove(codeList.get(i));
-                errorMsg.add("导入重复，不予读取：重复的编码值为" + codeList.get(i).getCode() );
+            for (ProductBean productBean : codeList) {
+                productBeans.remove(productBean);
+                errorMsg.add("导入重复，不予读取：重复的编码值为" + productBean.getCode());
             }
             List<ProductBean> allProduct = productService.getAllProduct();
             List<ProductBean> insertBeans = new ArrayList<>();
@@ -123,18 +126,18 @@ public class ProductController extends BaseController {
 
             HashMap<String, ProductBean> hashMap = new HashMap<>();
             if (allProduct.size() == 0) {
-                insertNum = productService.batchProductSave(productBeans, getCurrentUser());
+                productService.batchProductSave(productBeans, getCurrentUser());
                 insertNum = productBeans.size();
                 updateNum = 0;
             } else {
-                for (int i = 0; i < allProduct.size(); i++) {
-                    hashMap.put(allProduct.get(i).getCode(), allProduct.get(i));
+                for (ProductBean productBean : allProduct) {
+                    hashMap.put(productBean.getCode(), productBean);
                 }
-                for (int i = 0; i < productBeans.size(); i++) {
-                    if (hashMap.containsKey(productBeans.get(i).getCode())) {
-                        updateBeans.add(productBeans.get(i));
+                for (ProductBean productBean : productBeans) {
+                    if (hashMap.containsKey(productBean.getCode())) {
+                        updateBeans.add(productBean);
                     } else {
-                        insertBeans.add(productBeans.get(i));
+                        insertBeans.add(productBean);
                     }
                 }
 

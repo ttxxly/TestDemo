@@ -5,31 +5,31 @@ public class OrderDetailSaveVo {
     /**
      * 商品编码
      */
-    private String product_code;
+    private String productCode;
     /**
      * 商品名称
      */
-    private String product_name;
+    private String productName;
 
     /**
      * 商品总数量
      */
     private Long amount;
 
-    public String getProduct_code() {
-        return product_code;
+    public String getProductCode() {
+        return productCode;
     }
 
-    public void setProduct_code(String product_code) {
-        this.product_code = product_code;
+    public void setProductCode(String productCode) {
+        this.productCode = productCode;
     }
 
-    public String getProduct_name() {
-        return product_name;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setProduct_name(String product_name) {
-        this.product_name = product_name;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public Long getAmount() {

@@ -18,9 +18,12 @@ import java.util.Date;
 @Service("myUserServiceImpl")
 public class UserServiceImpl implements UserService {
 
-    @Autowired
     private UserDao dao;
 
+    @Autowired
+    public UserServiceImpl(UserDao dao) {
+        this.dao = dao;
+    }
     @Override
     public Page<UserBean> list(UserQO qo, int ps, int pn, UnifyUser optUser) {
         Page<UserBean> page = new Page<>();
@@ -120,8 +123,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserBean getById(Long id) {
-        UserBean bean = dao.get(id);
-
-        return bean;
+        return dao.get(id);
     }
 }

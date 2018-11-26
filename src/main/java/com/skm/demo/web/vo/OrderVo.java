@@ -12,32 +12,32 @@ public class OrderVo {
     /**
      * 货主编码
      */
-    private String shipper_code;
+    private String shipperCode;
 
     /**
      * 货主名称
      */
-    private String shipper_name;
+    private String shipperName;
 
     /**
      * 供货商编码
      */
-    private String provider_code;
+    private String providerCode;
 
     /**
      * 供货商名称
      */
-    private String provider_name;
+    private String providerName;
 
     /**
      * 订单提交时间
      */
-    private Date submit_dt;
+    private Date submitDt;
 
     /**
      * 到货日期
      */
-    private Date delivery_dt;
+    private Date deliveryDt;
 
     /**
      * 订购商品种类数量
@@ -57,52 +57,52 @@ public class OrderVo {
         this.no = no;
     }
 
-    public String getShipper_code() {
-        return shipper_code;
+    public String getShipperCode() {
+        return shipperCode;
     }
 
-    public void setShipper_code(String shipper_code) {
-        this.shipper_code = shipper_code;
+    public void setShipperCode(String shipperCode) {
+        this.shipperCode = shipperCode;
     }
 
-    public String getShipper_name() {
-        return shipper_name;
+    public String getShipperName() {
+        return shipperName;
     }
 
-    public void setShipper_name(String shipper_name) {
-        this.shipper_name = shipper_name;
+    public void setShipperName(String shipperName) {
+        this.shipperName = shipperName;
     }
 
-    public String getProvider_code() {
-        return provider_code;
+    public String getProviderCode() {
+        return providerCode;
     }
 
-    public void setProvider_code(String provider_code) {
-        this.provider_code = provider_code;
+    public void setProviderCode(String providerCode) {
+        this.providerCode = providerCode;
     }
 
-    public String getProvider_name() {
-        return provider_name;
+    public String getProviderName() {
+        return providerName;
     }
 
-    public void setProvider_name(String provider_name) {
-        this.provider_name = provider_name;
+    public void setProviderName(String providerName) {
+        this.providerName = providerName;
     }
 
-    public Date getSubmit_dt() {
-        return submit_dt;
+    public Date getSubmitDt() {
+        return submitDt;
     }
 
-    public void setSubmit_dt(Date submit_dt) {
-        this.submit_dt = submit_dt;
+    public void setSubmitDt(Date submitDt) {
+        this.submitDt = submitDt;
     }
 
-    public Date getDelivery_dt() {
-        return delivery_dt;
+    public Date getDeliveryDt() {
+        return deliveryDt;
     }
 
-    public void setDelivery_dt(Date delivery_dt) {
-        this.delivery_dt = delivery_dt;
+    public void setDeliveryDt(Date deliveryDt) {
+        this.deliveryDt = deliveryDt;
     }
 
     public Long getProductTypeNum() {

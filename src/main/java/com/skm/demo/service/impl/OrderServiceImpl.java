@@ -2,6 +2,8 @@ package com.skm.demo.service.impl;
 
 import com.skm.common.bean.dto.Page;
 import com.skm.common.bean.dto.UnifyUser;
+import com.skm.common.mybatis.config.ITransactional;
+import com.skm.common.mybatis.dao.BaseDao;
 import com.skm.common.mybatis.dto.BatchInsertParameter;
 import com.skm.demo.domain.OrderBean;
 import com.skm.demo.domain.OrderDetailBean;
@@ -19,8 +21,12 @@ import java.util.List;
 @Service("myOrderServiceImpl")
 public class OrderServiceImpl implements OrderService {
 
-    @Autowired
     private OrderDao dao;
+
+    @Autowired
+    public OrderServiceImpl(OrderDao dao) {
+        this.dao = dao;
+    }
 
     @Override
     public Page<OrderBean> list(OrderQo qo, int ps, int pn, UnifyUser optUser) {
@@ -28,11 +34,12 @@ public class OrderServiceImpl implements OrderService {
         page.setConditions(qo);
         page.setPn(pn);
         page.setPs(ps);
-        dao.dynamicSelectOrder(page);
+        dao.dynamicSelectPage(page);
         return page;
     }
 
     @Override
+    @ITransactional
     public OrderBean save(OrderDTO orderDTO, UnifyUser optUser) {
 
         OrderBean orderBean = orderDTO.getOrderBean();
@@ -45,22 +52,21 @@ public class OrderServiceImpl implements OrderService {
         dao.saveOrder(orderBean);
 
         List<OrderDetailBean> orderDetailBeans = orderDTO.getOrderDetailBeans();
-        for (int i=0; i<orderDetailBeans.size(); i++) {
-            orderDetailBeans.get(i).setOrderNo(orderBean.getNo());
-            orderDetailBeans.get(i).setEntryDt(new Date());
-            orderDetailBeans.get(i).setEntryId(optUser.getId());
-            orderDetailBeans.get(i).setEntryName(optUser.getRealName());
-            orderDetailBeans.get(i).setUpdateDt(new Date());
-            orderDetailBeans.get(i).setUpdateId(optUser.getId());
-            orderDetailBeans.get(i).setUpdateName(optUser.getRealName());
+        for (OrderDetailBean orderDetailBean: orderDetailBeans) {
+            orderDetailBean.setOrderNo(orderBean.getNo());
+            orderDetailBean.setEntryDt(new Date());
+            orderDetailBean.setEntryId(optUser.getId());
+            orderDetailBean.setEntryName(optUser.getRealName());
+            orderDetailBean.setUpdateDt(new Date());
+            orderDetailBean.setUpdateId(optUser.getId());
+            orderDetailBean.setUpdateName(optUser.getRealName());
         }
         dao.batchSaveOrderDetails(BatchInsertParameter.wrap(orderDetailBeans));
         return orderBean;
     }
 
     @Override
-    public OrderTemp getProductTypeNumAndProductNumByNo(String no) {
-        return dao.getProductTypeNumAndProductNumByNo(no);
+    public OrderTemp getProductTypeNumAndProductNumByNo(OrderDetailBean orderDetailBean) {
+        return dao.getProductTypeNumAndProductNumByNo(orderDetailBean);
     }
-
 }

@@ -5,6 +5,7 @@ import com.skm.common.bean.dto.Page;
 import com.skm.common.mybatis.dao.BaseDao;
 import com.skm.common.mybatis.dto.BatchInsertParameter;
 import com.skm.demo.domain.OrderBean;
+import com.skm.demo.domain.OrderDetailBean;
 import com.skm.demo.domain.UserBean;
 import com.skm.demo.web.vo.OrderTemp;
 import org.springframework.stereotype.Repository;
@@ -17,8 +18,8 @@ public interface OrderDao<T> extends BaseDao<OrderBean> {
     /**
      * 分页查询，查询后数据会直接存储在page参数的datas中，同时填写上分页数据
      *
-     * @param page
-     * @return
+     * @param page 分页查询对象
+     * @return 查询结果集
      */
     List<T> dynamicSelectOrder(Page<T> page);
 
@@ -40,8 +41,8 @@ public interface OrderDao<T> extends BaseDao<OrderBean> {
 
     /**
      * 获取 该订单号对应的商品种类数量和总数量
-     * @return
+     * @return 该订单号对应的商品种类数量和总数量
      */
-    OrderTemp getProductTypeNumAndProductNumByNo(String orderNo);
+    OrderTemp getProductTypeNumAndProductNumByNo(OrderDetailBean orderDetailBean);
 
 }

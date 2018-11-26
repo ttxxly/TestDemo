@@ -27,19 +27,20 @@
         `delivery_dt`
     </sql>
 
+    <sql id="querySql">
+        <where>
+            <if test="@Ognl@isNotEmpty(noLike)"> AND `no` like #{noLike, jdbcType=VARCHAR} </if>
+            <if test="@Ognl@isNotEmpty(shipperCodeLike)"> AND `shipper_code` like #{shipperCodeLike, jdbcType=VARCHAR} </if>
+            <if test="@Ognl@isNotEmpty(providerCodeLike)"> AND `provider_code` like #{providerCodeLike, jdbcType=VARCHAR} </if>
+            <if test="@Ognl@isNotEmpty(startSubmitTime)"> AND `submit_dt` &lt;= #{startSubmitTime, jdbcType=TIMESTAMP} </if>
+            <if test="@Ognl@isNotEmpty(endSubmitTime)"> AND `submit_dt` &gt;= #{endSubmitTime, jdbcType=TIMESTAMP} </if>
+        </where>
+    </sql>
+
     <select id="dynamicSelectOrder" resultMap="RM">
         SELECT <include refid="columns" /> FROM `demo_order` <include refid="querySql" />
     </select>
 
-    <sql id="querySql">
-            <where>
-                <if test="@Ognl@isNotEmpty(noLike)"> AND `no` like #{noLike, jdbcType=VARCHAR} </if>
-                <if test="@Ognl@isNotEmpty(shipperCodeLike)"> AND `shipper_code` like #{shipperCodeLike, jdbcType=VARCHAR} </if>
-                <if test="@Ognl@isNotEmpty(providerCodeLike)"> AND `provider_code` like #{providerCodeLike, jdbcType=VARCHAR} </if>
-                <if test="@Ognl@isNotEmpty(startSubmitTime)"> AND `submit_dt` &lt;= #{startSubmitTime, jdbcType=TIMESTAMP} </if>
-                <if test="@Ognl@isNotEmpty(endSubmitTime)"> AND `submit_dt` &gt;= #{endSubmitTime, jdbcType=TIMESTAMP} </if>
-            </where>
-    </sql>
 
     <insert id="saveOrder" useGeneratedKeys="true" keyProperty="id">
         <![CDATA[
@@ -109,11 +110,11 @@
     <select id="getProductTypeNumAndProductNumByNo" resultMap="AllSum">
         SELECT
         COUNT(order_no) as productTypeNum,
-        SUM(num) as productNum
+        SUM(amount) as productNum
         FROM
             demo_order_detail
         <where>
-            <if test="@Ognl@isNotEmpty(no)"> AND `order_no` = #{no, jdbcType=VARCHAR} </if>
+            <if test="@Ognl@isNotEmpty(orderNo)"> AND `order_no` = #{orderNo, jdbcType=VARCHAR} </if>
         </where>
     </select>
 </mapper>

@@ -33,33 +33,41 @@ import java.util.Optional;
 @RequestMapping("/web/v1/order")
 public class OrderController extends BaseController {
 
-    @Autowired
     private OrderService orderService;
+
+    @Autowired
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
+    }
 
     /**
      * 查询订单
      *
-     * @param pageParam
-     * @return
+     * @param pageParam 分页查询对象
+     * @return 结果集
      */
-    //to do OrderQueryVo 加上 LIke
     @PostMapping(value = "/page")
     public Result<Page<OrderVo>> page(@RequestBody PageParam<OrderQueryVo> pageParam) {
         int pn = pageParam.getPn();
         int ps = pageParam.getPs();
+        if (pn == 0 || ps == 0) {
+            return Result.error("", "页码或行数不能为零哦");
+        }
         UnifyUser currentUser = getCurrentUser();
-        OrderQo orderQo = Optional.of(pageParam.getConditions()).map(cond -> {
-            return BeanMapper.map(cond, OrderQo.class);
-        }).orElse(null);
+        OrderQo orderQo = Optional.of(pageParam.getConditions())
+                .map(cond -> BeanMapper.map(cond, OrderQo.class))
+                .orElse(null);
 
         Page<OrderBean> beanPage = orderService.list(orderQo, ps, pn, currentUser);
 
         List<OrderVo> orderVos = BeanMapper.mapList(beanPage.getDatas(), OrderBean.class, OrderVo.class);
         //获取指定订单号的商品种类数量和总数量
-        for (int i=0; i<orderVos.size(); i++) {
-            OrderTemp orderTemp = orderService.getProductTypeNumAndProductNumByNo(orderVos.get(i).getNo());
-            orderVos.get(i).setProductTypeNum(orderTemp.getProductTypeNum());
-            orderVos.get(i).setProductNum(orderTemp.getProductNum());
+        OrderDetailBean orderDetailBean = new OrderDetailBean();
+        for (OrderVo orderVo:orderVos) {
+            orderDetailBean.setOrderNo(orderVo.getNo());
+            OrderTemp orderTemp = orderService.getProductTypeNumAndProductNumByNo(orderDetailBean);
+            orderVo.setProductTypeNum(orderTemp.getProductTypeNum());
+            orderVo.setProductNum(orderTemp.getProductNum());
         }
         Page<OrderVo> page = new Page<>(beanPage.getPn(), beanPage.getPs());
         page.setTc(beanPage.getTc());
@@ -71,11 +79,10 @@ public class OrderController extends BaseController {
     /**
      * 添加订单
      *
-     * @param
-     * @return
+     * @param saveVo 保存订单对象
+     * @return 结果集
      */
     @PostMapping(value = "/add")
-    //
     public Result<OrderVo> add(@Validated @RequestBody OrderSaveVo saveVo) {
 
         OrderDTO orderDTO = new OrderDTO();
@@ -90,11 +97,11 @@ public class OrderController extends BaseController {
     /**
      * 获取订单号
      *
-     * @return
+     * @return 订单号
      */
     @PostMapping(value = "/getOrderNum")
     public String getOrderNum() {
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");//设置日期格式
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSS");//设置日期格式
         return df.format(new Date());
     }
 }

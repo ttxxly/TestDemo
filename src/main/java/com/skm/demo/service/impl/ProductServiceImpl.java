@@ -24,12 +24,14 @@ import java.util.List;
 @Service("myProductServiceImpl")
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
     private ProductDao dao;
-    private String date;
+
+    @Autowired
+    public ProductServiceImpl(ProductDao dao) {
+        this.dao = dao;
+    }
 
     @Override
-    @ITransactional
     public Page<ProductBean> list(ProductQo qo, int ps, int pn, UnifyUser optUser) {
         Page<ProductBean> page = new Page<>();
         page.setConditions(qo);
@@ -42,38 +44,33 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @ITransactional
-    public Integer batchProductSave(List<ProductBean> productBeans, UnifyUser optUser) throws ParseException {
-        for (int i=0; i<productBeans.size(); i++) {
-            productBeans.get(i).setImportDt(new Date());
-            productBeans.get(i).setEntryDt(new Date());
-            productBeans.get(i).setEntryId(optUser.getId());
-            productBeans.get(i).setEntryName(optUser.getRealName());
-            productBeans.get(i).setUpdateDt(new Date());
-            productBeans.get(i).setUpdateId(optUser.getId());
-            productBeans.get(i).setUpdateName(optUser.getRealName());
+    public Integer batchProductSave(List<ProductBean> productBeans, UnifyUser optUser){
+        for (ProductBean p :
+                productBeans) {
+            p.setImportDt(new Date());
+            p.setEntryDt(new Date());
+            p.setEntryId(optUser.getId());
+            p.setEntryName(optUser.getRealName());
+            p.setUpdateDt(new Date());
+            p.setUpdateId(optUser.getId());
+            p.setUpdateName(optUser.getRealName());
         }
-        //影响行数
-        int saveNum = dao.batchProductSave(BatchInsertParameter.wrap(productBeans));
-        return saveNum;
+        return dao.batchProductSave(BatchInsertParameter.wrap(productBeans));
     }
 
     @Override
-    @ITransactional
     public Integer batchProductUpdate(List<ProductBean> productBeans, UnifyUser optUser) {
-        for (int i=0; i<productBeans.size(); i++) {
-            productBeans.get(i).setUpdateDt(new Date());
-            productBeans.get(i).setUpdateId(optUser.getId());
-            productBeans.get(i).setUpdateName(optUser.getRealName());
+        for (ProductBean productBean: productBeans) {
+            productBean.setUpdateDt(new Date());
+            productBean.setUpdateId(optUser.getId());
+            productBean.setUpdateName(optUser.getRealName());
         }
-        int updateNum = dao.batchProductUpdate(BatchInsertParameter.wrap(productBeans));
-        return updateNum;
+        return dao.batchProductUpdate(BatchInsertParameter.wrap(productBeans));
     }
 
     @Override
-    @ITransactional
     public List<ProductBean> getAllProduct() {
         return dao.getAllProduct();
     }
-
 
 }

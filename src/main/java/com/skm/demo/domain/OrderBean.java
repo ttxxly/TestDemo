@@ -23,7 +23,7 @@ public class OrderBean extends BaseBean {
     private String shipperCode;
 
     /**
-     * 货主编码
+     * 货主名称
      */
     private String shipperName;
 
