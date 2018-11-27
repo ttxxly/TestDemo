@@ -50,15 +50,13 @@ public class OrderController extends BaseController {
     public Result<Page<OrderVo>> page(@RequestBody PageParam<OrderQueryVo> pageParam) {
         int pn = pageParam.getPn();
         int ps = pageParam.getPs();
-        if (pn == 0 || ps == 0) {
-            return Result.error("", "页码或行数不能为零哦");
-        }
         UnifyUser currentUser = getCurrentUser();
         OrderQo orderQo = Optional.of(pageParam.getConditions())
                 .map(cond -> BeanMapper.map(cond, OrderQo.class))
                 .orElse(null);
 
         Page<OrderBean> beanPage = orderService.list(orderQo, ps, pn, currentUser);
+        //拿到所有no进行批量查询然后对应对象进行数据补全
 
         List<OrderVo> orderVos = BeanMapper.mapList(beanPage.getDatas(), OrderBean.class, OrderVo.class);
         //获取指定订单号的商品种类数量和总数量

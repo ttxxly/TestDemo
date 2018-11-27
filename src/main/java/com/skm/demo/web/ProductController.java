@@ -10,6 +10,8 @@ import com.skm.demo.domain.ProductBean;
 import com.skm.demo.persistence.qo.ProductQo;
 import com.skm.demo.service.ProductService;
 import com.skm.demo.web.vo.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +27,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/web/v1/product")
 public class ProductController extends BaseController {
+    public static Logger LOG = LoggerFactory.getLogger(ProductController.class);
 
     private ProductService productService;
 
@@ -37,9 +40,6 @@ public class ProductController extends BaseController {
     public Result<Page<ProductVo>> page(@RequestBody PageParam<ProductQueryVo> pageParam) {
         int pn = pageParam.getPn();
         int ps = pageParam.getPs();
-        if (pn == 0 || ps == 0) {
-            return Result.error("", "页码或行数不能为零哦");
-        }
         UnifyUser currentUser = getCurrentUser();
 
         ProductQo productQo = Optional.of(pageParam.getConditions())
@@ -60,7 +60,6 @@ public class ProductController extends BaseController {
     public Result<List<ProductVo>> getAllProduct() {
         List<ProductBean> productBeans = productService.getAllProduct();
         List<ProductVo> productVos = BeanMapper.mapList(productBeans, ProductBean.class, ProductVo.class);
-
         return Result.success(productVos);
     }
 
@@ -72,14 +71,13 @@ public class ProductController extends BaseController {
 
         //返回结果对象
         ProductSaveResultVo pvo = new ProductSaveResultVo();
-
-        try {
+        try (InputStream inputStream = file.getInputStream();
+             BufferedReader br = new BufferedReader(
+                     new InputStreamReader(inputStream, StandardCharsets.UTF_8));) {
             // Get the file and save it somewhere
-            InputStream inputStream = file.getInputStream();
+
             StringBuilder sb = new StringBuilder();
             String line;
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
             int count = 0;
             ProductSaveResultVo result = new ProductSaveResultVo();
             List<String> errorMsg = new ArrayList<>();
@@ -101,7 +99,6 @@ public class ProductController extends BaseController {
                     psv.add(saveVo);
                 }
             }
-            inputStream.close();
             System.out.println(sb.toString());
             //批量转化
             List<ProductBean> productBeans = BeanMapper.mapList(psv, ProductSaveVo.class, ProductBean.class);
@@ -157,7 +154,7 @@ public class ProductController extends BaseController {
             pvo.setUpdateNum(updateNum);
             pvo.setSuccessMsg("导入成功:共导入" + insertNum + "个商品,更新" + updateNum + "个商品");
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error(e.toString());
         }
         return Result.success(pvo);
     }

@@ -45,8 +45,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @ITransactional
     public Integer batchProductSave(List<ProductBean> productBeans, UnifyUser optUser){
-        for (ProductBean p :
-                productBeans) {
+        for (ProductBean p : productBeans) {
             p.setImportDt(new Date());
             p.setEntryDt(new Date());
             p.setEntryId(optUser.getId());

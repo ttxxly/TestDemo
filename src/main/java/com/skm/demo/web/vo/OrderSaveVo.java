@@ -50,6 +50,8 @@ public class OrderSaveVo {
 
     private List<OrderDetailSaveVo> beans;
 
+
+
     public String getNo() {
         return no;
     }
