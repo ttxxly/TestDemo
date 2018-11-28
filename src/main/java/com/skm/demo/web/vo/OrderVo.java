@@ -49,6 +49,8 @@ public class OrderVo {
      */
     private Long productNum;
 
+    private Double totalMoney;
+
     public String getNo() {
         return no;
     }
@@ -119,5 +121,13 @@ public class OrderVo {
 
     public void setProductNum(Long productNum) {
         this.productNum = productNum;
+    }
+
+    public Double getTotalMoney() {
+        return totalMoney;
+    }
+
+    public void setTotalMoney(Double totalMoney) {
+        this.totalMoney = totalMoney;
     }
 }

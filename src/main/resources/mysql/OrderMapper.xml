@@ -12,10 +12,16 @@
         <result column="delivery_dt" jdbcType="TIMESTAMP" property="deliveryDt" />
     </resultMap>
 
-    <resultMap id="AllSum" type="com.skm.demo.web.vo.OrderTemp">
-        <result column="productTypeNum" jdbcType="BIGINT" property="productTypeNum" />
-        <result column="productNum" jdbcType="BIGINT" property="productNum" />
+    <resultMap id="RDTO" type="com.skm.demo.persistence.DTO.OrderQueryDTO">
+        <result column="no" jdbcType="VARCHAR" property="no" />
+        <result column="shipper_code" jdbcType="VARCHAR" property="shipperCode" />
+        <result column="shipper_name" jdbcType="VARCHAR" property="shipperName" />
+        <result column="provider_code" jdbcType="VARCHAR" property="providerCode" />
+        <result column="provider_name" jdbcType="VARCHAR" property="providerName" />
+        <result column="submit_dt" jdbcType="TIMESTAMP" property="submitDt" />
+        <result column="delivery_dt" jdbcType="TIMESTAMP" property="deliveryDt" />
     </resultMap>
+
 
     <sql id="columns">
         `no`,
@@ -37,7 +43,7 @@
         </where>
     </sql>
 
-    <select id="dynamicSelectOrder" resultMap="RM">
+    <select id="dynamicSelectOrder" resultMap="RDTO">
         SELECT <include refid="columns" /> FROM `demo_order` <include refid="querySql" />
     </select>
 
@@ -77,44 +83,4 @@
         ]]>
     </insert>
 
-    <insert id="batchSaveOrderDetails" useGeneratedKeys="true"
-            parameterType="com.skm.common.mybatis.dto.BatchInsertParameter" keyProperty="id">
-        <![CDATA[
-               INSERT INTO `demo_order_detail` (
-                    `order_no`,
-                    `product_code`,
-                    `product_name`,
-                    `amount`,
-                    `entry_id`,
-                    `entry_name`,
-                    `entry_dt`,
-                    `update_id`,
-                    `update_name`,
-                    `update_dt`
-                  )
-              VALUES (
-                    #{orderNo, jdbcType=VARCHAR},
-                    #{productCode, jdbcType=VARCHAR},
-                    #{productName, jdbcType=VARCHAR},
-                    #{amount, jdbcType=BIGINT},
-                    #{entryId, jdbcType=BIGINT},
-                    #{entryName, jdbcType=VARCHAR},
-                    #{entryDt, jdbcType=TIMESTAMP},
-                    #{updateId, jdbcType=BIGINT},
-                    #{updateName, jdbcType=VARCHAR},
-                    #{updateDt, jdbcType=TIMESTAMP}
-              )
-          ]]>
-    </insert>
-
-    <select id="getProductTypeNumAndProductNumByNo" resultMap="AllSum">
-        SELECT
-        COUNT(order_no) as productTypeNum,
-        SUM(amount) as productNum
-        FROM
-            demo_order_detail
-        <where>
-            <if test="@Ognl@isNotEmpty(orderNo)"> AND `order_no` = #{orderNo, jdbcType=VARCHAR} </if>
-        </where>
-    </select>
 </mapper>

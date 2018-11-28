@@ -7,6 +7,7 @@ import com.skm.common.mybatis.dto.BatchInsertParameter;
 import com.skm.demo.domain.OrderBean;
 import com.skm.demo.domain.OrderDetailBean;
 import com.skm.demo.domain.UserBean;
+import com.skm.demo.persistence.DTO.OrderQueryDTO;
 import com.skm.demo.web.vo.OrderTemp;
 import org.springframework.stereotype.Repository;
 
@@ -21,7 +22,7 @@ public interface OrderDao<T> extends BaseDao<OrderBean> {
      * @param page 分页查询对象
      * @return 查询结果集
      */
-    List<T> dynamicSelectOrder(Page<T> page);
+    List<OrderQueryDTO> dynamicSelectOrder(Page<T> page);
 
     /**
      * 新增实体
@@ -30,19 +31,5 @@ public interface OrderDao<T> extends BaseDao<OrderBean> {
      * @return 行数
      */
     int saveOrder(T entity);
-
-    /**
-     * 批量保存
-     *
-     * @param entity 需要保存的实体
-     * @return 行数
-     */
-    int batchSaveOrderDetails(BatchInsertParameter<T> entity);
-
-    /**
-     * 获取 该订单号对应的商品种类数量和总数量
-     * @return 该订单号对应的商品种类数量和总数量
-     */
-    OrderTemp getProductTypeNumAndProductNumByNo(OrderDetailBean orderDetailBean);
 
 }

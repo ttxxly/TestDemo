@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "classpath:com/skm/common/mybatis/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.skm.demo.persistence.dao.OrderDetailDao">
+
+    <resultMap id="AllSumAndMoney" type="com.skm.demo.persistence.DTO.OrderQueryDTO">
+        <result column="productTypeNum" jdbcType="BIGINT" property="productTypeNum" />
+        <result column="productNum" jdbcType="BIGINT" property="productNum" />
+        <result column="totalMoney" jdbcType="DECIMAL" property="productNum" />
+    </resultMap>
+
+    <insert id="batchSaveOrderDetails" useGeneratedKeys="true"
+            parameterType="com.skm.common.mybatis.dto.BatchInsertParameter" keyProperty="id">
+        <![CDATA[
+               INSERT INTO `demo_order_detail` (
+                    `order_no`,
+                    `product_code`,
+                    `product_name`,
+                    `amount`,
+                    `price`,
+                    `total_money`,
+                    `entry_id`,
+                    `entry_name`,
+                    `entry_dt`,
+                    `update_id`,
+                    `update_name`,
+                    `update_dt`
+                  )
+              VALUES (
+                    #{orderNo, jdbcType=VARCHAR},
+                    #{productCode, jdbcType=VARCHAR},
+                    #{productName, jdbcType=VARCHAR},
+                    #{amount, jdbcType=BIGINT},
+                    #{price, jdbcType=DECIMAL},
+                    #{totalMoney, jdbcType=DECIMAL},
+                    #{entryId, jdbcType=BIGINT},
+                    #{entryName, jdbcType=VARCHAR},
+                    #{entryDt, jdbcType=TIMESTAMP},
+                    #{updateId, jdbcType=BIGINT},
+                    #{updateName, jdbcType=VARCHAR},
+                    #{updateDt, jdbcType=TIMESTAMP}
+              )
+          ]]>
+    </insert>
+
+    <select id="getNumAndMoneyByNos" resultMap="AllSumAndMoney"
+            parameterType="com.skm.demo.domain.OrderDetailBean" >
+        SELECT
+        COUNT(order_no) as productTypeNum,
+        SUM(amount) as productNum,
+        SUM(total_money) as totalMoney
+        FROM
+        `demo_order_detail`
+        WHERE
+        <foreach collection="list" item="item" separator="OR">
+            order_no =  #{item.orderNo}
+        </foreach>
+    </select>
+</mapper>

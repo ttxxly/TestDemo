@@ -28,6 +28,16 @@ public class OrderDetailBean extends BaseBean {
      */
     private Long amount;
 
+    /**
+     * 订单单价
+     */
+    private Double price;
+
+    /**
+     * 订单总金额
+     */
+    private Double totalMoney;
+
     public Long getId() {
         return id;
     }
@@ -66,5 +76,21 @@ public class OrderDetailBean extends BaseBean {
 
     public void setAmount(Long amount) {
         this.amount = amount;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Double getTotalMoney() {
+        return totalMoney;
+    }
+
+    public void setTotalMoney(Double totalMoney) {
+        this.totalMoney = totalMoney;
     }
 }

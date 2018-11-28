@@ -9,6 +9,7 @@ import com.skm.demo.persistence.qo.UserQO;
 import com.skm.demo.web.vo.ProductSaveResultVo;
 import com.skm.demo.web.vo.ProductSaveVo;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 import java.util.List;
@@ -21,25 +22,20 @@ public interface ProductService {
      * @param qo 查询参数
      * @param ps 页大小
      * @param pn 页码
-     * @return
+     * @return 数据
      */
     Page<ProductBean> list(ProductQo qo, int ps, int pn, UnifyUser optUser);
 
     /**
      * 批量新增商品信息
-     * @param productBeans
-     * @return
+     * @param file 上传的文件
+     * @return 结果集
      */
-    Integer batchProductSave(List<ProductBean> productBeans, UnifyUser optUser) throws ParseException;
-
-    /**
-     * 批量更新商品信息
-     */
-    Integer batchProductUpdate(List<ProductBean> productBeans, UnifyUser optUser);
+    ProductSaveResultVo batchProductSave(MultipartFile file, UnifyUser optUser);
 
     /**
      * 获取所有的商品信息
-     * @return
+     * @return 商品
      */
     List<ProductBean> getAllProduct();
 }

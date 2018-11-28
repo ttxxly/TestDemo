@@ -8,12 +8,9 @@ import com.skm.common.bean.utils.BeanMapper;
 import com.skm.common.spring.advisor.BaseController;
 import com.skm.demo.domain.OrderBean;
 import com.skm.demo.domain.OrderDetailBean;
-import com.skm.demo.domain.ProductBean;
-import com.skm.demo.domain.UserBean;
-import com.skm.demo.enums.UserStatus;
-import com.skm.demo.persistence.DTO.OrderDTO;
+import com.skm.demo.persistence.DTO.OrderQueryDTO;
+import com.skm.demo.persistence.DTO.OrderSaveDTO;
 import com.skm.demo.persistence.qo.OrderQo;
-import com.skm.demo.persistence.qo.UserQO;
 import com.skm.demo.service.OrderService;
 import com.skm.demo.web.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -55,20 +53,10 @@ public class OrderController extends BaseController {
                 .map(cond -> BeanMapper.map(cond, OrderQo.class))
                 .orElse(null);
 
-        Page<OrderBean> beanPage = orderService.list(orderQo, ps, pn, currentUser);
-        //拿到所有no进行批量查询然后对应对象进行数据补全
-
-        List<OrderVo> orderVos = BeanMapper.mapList(beanPage.getDatas(), OrderBean.class, OrderVo.class);
-        //获取指定订单号的商品种类数量和总数量
-        OrderDetailBean orderDetailBean = new OrderDetailBean();
-        for (OrderVo orderVo:orderVos) {
-            orderDetailBean.setOrderNo(orderVo.getNo());
-            OrderTemp orderTemp = orderService.getProductTypeNumAndProductNumByNo(orderDetailBean);
-            orderVo.setProductTypeNum(orderTemp.getProductTypeNum());
-            orderVo.setProductNum(orderTemp.getProductNum());
-        }
-        Page<OrderVo> page = new Page<>(beanPage.getPn(), beanPage.getPs());
-        page.setTc(beanPage.getTc());
+        Page<OrderQueryDTO> dtoPage = orderService.list(orderQo, ps, pn, currentUser);
+        List<OrderVo> orderVos = BeanMapper.mapList(dtoPage.getDatas(), OrderQueryDTO.class, OrderVo.class);
+        Page<OrderVo> page = new Page<>(dtoPage.getPn(), dtoPage.getPs());
+        page.setTc(dtoPage.getTc());
         page.setDatas(orderVos);
 
         return Result.success(page);
@@ -83,11 +71,9 @@ public class OrderController extends BaseController {
     @PostMapping(value = "/add")
     public Result<OrderVo> add(@Validated @RequestBody OrderSaveVo saveVo) {
 
-        OrderDTO orderDTO = new OrderDTO();
-        orderDTO.setOrderBean(BeanMapper.map(saveVo, OrderBean.class));
-        orderDTO.setOrderDetailBeans(BeanMapper.mapList(saveVo.getBeans(), OrderDetailSaveVo.class, OrderDetailBean.class));
-
-        OrderBean save = orderService.save(orderDTO, getCurrentUser());
+        OrderSaveDTO orderSaveDTO = BeanMapper.map(saveVo, OrderSaveDTO.class);
+        orderSaveDTO.setList(BeanMapper.mapList(saveVo.getBeans(), OrderDetailSaveVo.class, OrderDetailBean.class));
+        OrderBean save = orderService.save(orderSaveDTO, getCurrentUser());
         OrderVo savedVo = BeanMapper.map(save, OrderVo.class);
         return Result.success(savedVo);
     }
