@@ -83,4 +83,12 @@
         ]]>
     </insert>
 
+    <select id="getOrderByNo" resultMap="RM" parameterMap="java.lang.String" >
+        SELECT
+            *
+        FROM
+            `demo_order`
+        WHERE
+            `no` = #{no, jdbcType=VARCHAR}
+    </select>
 </mapper>

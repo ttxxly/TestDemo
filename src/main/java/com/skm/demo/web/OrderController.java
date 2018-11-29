@@ -10,9 +10,11 @@ import com.skm.demo.domain.OrderBean;
 import com.skm.demo.domain.OrderDetailBean;
 import com.skm.demo.persistence.DTO.OrderQueryDTO;
 import com.skm.demo.persistence.DTO.OrderSaveDTO;
+import com.skm.demo.persistence.DTO.OrderUpdateDTO;
 import com.skm.demo.persistence.qo.OrderQo;
 import com.skm.demo.service.OrderService;
 import com.skm.demo.web.vo.*;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -88,4 +90,33 @@ public class OrderController extends BaseController {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSS");//设置日期格式
         return df.format(new Date());
     }
+
+    /**
+     * 更新订单
+     *
+     * @return 操作代码：0表示更新失败，1表示更新成功
+     */
+    @PostMapping(value = "/updateOrder")
+    public Integer updateOrder(OrderSaveVo orderSaveVo) {
+
+        return 0;
+    }
+
+    /**
+     * 数据回显订单的信息
+     *
+     * @param no 订单号
+     * @return 操作代码：1表示数据回显成功，0表示失败
+     */
+    @PostMapping(value = "/showOrderAndOrderDetail")
+    public OrderShowVO showOrderAndOrderDetail(String no) {
+        OrderShowVO orderShowVO;
+
+        OrderUpdateDTO orderUpdateDTO = orderService.showOrderAndOrderDetail(no);
+        orderShowVO = BeanMapper.map(orderUpdateDTO, OrderShowVO.class);
+        orderShowVO.setOrderDetailVOS(BeanMapper.mapList(orderUpdateDTO.getOrderDetailBeans(), OrderDetailBean.class, OrderDetailVO.class));
+
+        return orderShowVO;
+    }
+
 }

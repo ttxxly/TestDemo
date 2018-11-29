@@ -9,6 +9,7 @@ import com.skm.demo.web.vo.OrderTemp;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
 @Repository("myOrderDetailDao")
 public interface OrderDetailDao<T> extends BaseDao<OrderBean> {
 
@@ -22,4 +23,7 @@ public interface OrderDetailDao<T> extends BaseDao<OrderBean> {
      */
     int batchSaveOrderDetails(BatchInsertParameter<T> entity);
 
+    List<OrderDetailBean> getOrderDetailByNo(String no);
+
+    List<OrderDetailBean> getOrderDetailByCode(List<OrderDetailBean> orderDetailBeans);
 }

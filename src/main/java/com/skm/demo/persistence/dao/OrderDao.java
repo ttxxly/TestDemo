@@ -32,4 +32,10 @@ public interface OrderDao<T> extends BaseDao<OrderBean> {
      */
     int saveOrder(T entity);
 
+    /**
+     * 根据订单号获取订单对象
+     * @param no 订单号
+     * @return 订单对象
+     */
+    OrderBean getOrderByNo(String no);
 }

@@ -7,11 +7,10 @@ import com.skm.common.bean.dto.UnifyUser;
 import com.skm.common.bean.utils.BeanMapper;
 import com.skm.common.spring.advisor.BaseController;
 import com.skm.demo.domain.ProductBean;
+import com.skm.demo.persistence.DTO.ProductSaveResultDTO;
 import com.skm.demo.persistence.qo.ProductQo;
 import com.skm.demo.service.ProductService;
 import com.skm.demo.web.vo.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,9 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
-import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @RestController
@@ -64,7 +60,7 @@ public class ProductController extends BaseController {
 
     @PostMapping(value = "/add")
     public Result add(MultipartFile file) {
-        ProductSaveResultVo pvo = productService.batchProductSave(file, getCurrentUser());
+        ProductSaveResultDTO pvo = productService.batchProductSave(file, getCurrentUser());
         return Result.success(pvo);
     }
 }

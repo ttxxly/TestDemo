@@ -3,15 +3,11 @@ package com.skm.demo.service;
 import com.skm.common.bean.dto.Page;
 import com.skm.common.bean.dto.UnifyUser;
 import com.skm.demo.domain.ProductBean;
-import com.skm.demo.domain.UserBean;
 import com.skm.demo.persistence.qo.ProductQo;
-import com.skm.demo.persistence.qo.UserQO;
-import com.skm.demo.web.vo.ProductSaveResultVo;
-import com.skm.demo.web.vo.ProductSaveVo;
+import com.skm.demo.persistence.DTO.ProductSaveResultDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.text.ParseException;
 import java.util.List;
 @Service
 public interface ProductService {
@@ -31,7 +27,7 @@ public interface ProductService {
      * @param file 上传的文件
      * @return 结果集
      */
-    ProductSaveResultVo batchProductSave(MultipartFile file, UnifyUser optUser);
+    ProductSaveResultDTO batchProductSave(MultipartFile file, UnifyUser optUser);
 
     /**
      * 获取所有的商品信息

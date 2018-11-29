@@ -1,19 +1,16 @@
 package com.skm.demo.service.impl;
 
 import com.skm.common.bean.dto.Page;
-import com.skm.common.bean.dto.Result;
 import com.skm.common.bean.dto.UnifyUser;
 import com.skm.common.bean.utils.BeanMapper;
 import com.skm.common.mybatis.config.ITransactional;
 import com.skm.common.mybatis.dto.BatchInsertParameter;
 import com.skm.demo.domain.ProductBean;
-import com.skm.demo.domain.UserBean;
 import com.skm.demo.persistence.dao.ProductDao;
 import com.skm.demo.persistence.qo.ProductQo;
-import com.skm.demo.persistence.qo.UserQO;
 import com.skm.demo.service.ProductService;
 import com.skm.demo.web.ProductController;
-import com.skm.demo.web.vo.ProductSaveResultVo;
+import com.skm.demo.persistence.DTO.ProductSaveResultDTO;
 import com.skm.demo.web.vo.ProductSaveVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +23,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -35,9 +30,6 @@ import java.util.*;
 public class ProductServiceImpl implements ProductService {
 
     private ProductDao<ProductBean> dao;
-    private List<String> errorMsg;
-    private List<ProductSaveVo> psv;
-    private HashMap<Integer, Integer> lineMap;
     private static Logger LOG = LoggerFactory.getLogger(ProductController.class);
 
     @Autowired
@@ -58,23 +50,23 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @ITransactional
-    public ProductSaveResultVo batchProductSave(MultipartFile file, UnifyUser optUser){
+    public ProductSaveResultDTO batchProductSave(MultipartFile file, UnifyUser optUser){
 
         int insertNum;
         int updateNum;
+        List<String> errorMsg = new ArrayList<>();
+        List<ProductSaveVo> psv = new ArrayList<>();
+        HashMap<Integer, Integer> lineMap = new HashMap<>();
 
         //返回结果对象
-        ProductSaveResultVo resultVo = new ProductSaveResultVo();
+        ProductSaveResultDTO resultVo = new ProductSaveResultDTO();
 
-        try (InputStream inputStream = file.getInputStream();
-             BufferedReader br = new BufferedReader(
-                     new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+        try (   InputStream inputStream = file.getInputStream();
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+                BufferedReader br = new BufferedReader(inputStreamReader)){
             String line ;
             int count = 0;
             int tmp = 0;
-            errorMsg = new ArrayList<>();
-            psv = new ArrayList<>();
-            lineMap = new HashMap<>();
             while ((line = br.readLine()) != null) {
                 count++;
                 String[] rsu = line.split(",");
@@ -149,7 +141,7 @@ public class ProductServiceImpl implements ProductService {
 
         HashMap<String, ProductBean> hashMap = new HashMap<>();
         if (allProduct.size() == 0) {
-            dao.batchProductSave(BatchInsertParameter.wrap(setNecessary(productBeans, optUser)));
+            dao.batchProductSave(BatchInsertParameter.wrap(setNecessary(productBeans, optUser, 1)));
             insertNum = productBeans.size();
             updateNum = 0;
         } else {
@@ -167,10 +159,10 @@ public class ProductServiceImpl implements ProductService {
             insertNum = insertBeans.size();
             updateNum = updateBeans.size();
             if (insertNum != 0) {
-                dao.batchProductSave(BatchInsertParameter.wrap(setNecessary(insertBeans, optUser)));
+                dao.batchProductSave(BatchInsertParameter.wrap(setNecessary(insertBeans, optUser, 1)));
             }
             if (updateNum != 0) {
-                dao.batchProductUpdate(BatchInsertParameter.wrap(setNecessary(updateBeans, optUser)));
+                dao.batchProductUpdate(BatchInsertParameter.wrap(setNecessary(updateBeans, optUser, 2)));
             }
         }
         //定制返回结果
@@ -184,15 +176,24 @@ public class ProductServiceImpl implements ProductService {
         return dao.getAllProduct();
     }
 
-    private List<ProductBean> setNecessary(List<ProductBean> productBeans, UnifyUser optUser){
-        for (ProductBean p : productBeans) {
-            p.setImportDt(new Date());
-            p.setEntryDt(new Date());
-            p.setEntryId(optUser.getId());
-            p.setEntryName(optUser.getRealName());
-            p.setUpdateDt(new Date());
-            p.setUpdateId(optUser.getId());
-            p.setUpdateName(optUser.getRealName());
+    private List<ProductBean> setNecessary(List<ProductBean> productBeans, UnifyUser optUser, Integer code){
+
+        if (code == 1) { //做插入操作
+            for (ProductBean p : productBeans) {
+                p.setImportDt(new Date());
+                p.setEntryDt(new Date());
+                p.setEntryId(optUser.getId());
+                p.setEntryName(optUser.getRealName());
+                p.setUpdateDt(new Date());
+                p.setUpdateId(optUser.getId());
+                p.setUpdateName(optUser.getRealName());
+            }
+        }else if (code == 2) {//做更新操作
+            for (ProductBean p : productBeans) {
+                p.setUpdateDt(new Date());
+                p.setUpdateId(optUser.getId());
+                p.setUpdateName(optUser.getRealName());
+            }
         }
         return productBeans;
     }

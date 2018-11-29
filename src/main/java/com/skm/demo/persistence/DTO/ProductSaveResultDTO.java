@@ -1,9 +1,9 @@
-package com.skm.demo.web.vo;
+package com.skm.demo.persistence.DTO;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class ProductSaveResultVo implements Serializable {
+public class ProductSaveResultDTO implements Serializable {
 
     private List<String> errorMsg;
     private String successMsg;

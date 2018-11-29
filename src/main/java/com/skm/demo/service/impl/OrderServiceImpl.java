@@ -7,12 +7,15 @@ import com.skm.common.mybatis.config.ITransactional;
 import com.skm.common.mybatis.dto.BatchInsertParameter;
 import com.skm.demo.domain.OrderBean;
 import com.skm.demo.domain.OrderDetailBean;
+import com.skm.demo.domain.ProductBean;
 import com.skm.demo.persistence.DTO.OrderQueryDTO;
 import com.skm.demo.persistence.DTO.OrderSaveDTO;
+import com.skm.demo.persistence.DTO.OrderUpdateDTO;
 import com.skm.demo.persistence.dao.OrderDao;
 import com.skm.demo.persistence.dao.OrderDetailDao;
 import com.skm.demo.persistence.qo.OrderQo;
 import com.skm.demo.service.OrderService;
+import com.skm.demo.web.vo.OrderSaveVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sun.rmi.runtime.Log;
@@ -28,7 +31,6 @@ public class OrderServiceImpl implements OrderService {
     private OrderDao<OrderBean> orderDao;
 
     private OrderDetailDao<OrderDetailBean> orderDetailDao;
-
 
 
     @Autowired
@@ -57,13 +59,13 @@ public class OrderServiceImpl implements OrderService {
                 orderDetailBeans.add(orderDetailBean);
             }
             List<OrderQueryDTO> queryDTOList = orderDetailDao.getNumAndMoneyByNos(orderDetailBeans);
-            OrderBean orderBean;
             for (OrderQueryDTO orderQueryDTO : queryDTOList) {
-                for (int i = 0; i<queryDTO.size(); i++) {
+                for (int i = 0; i < queryDTO.size(); i++) {
                     if (queryDTO.get(i).getNo().equals(orderQueryDTO.getOrderNo())) {
                         queryDTO.get(i).setProductNum(orderQueryDTO.getProductNum());
                         queryDTO.get(i).setProductTypeNum(orderQueryDTO.getProductTypeNum());
                         queryDTO.get(i).setTotalMoney(orderQueryDTO.getTotalMoney());
+                        queryDTO.get(i).setOrderNo(orderQueryDTO.getOrderNo());
                     }
                 }
             }
@@ -91,7 +93,8 @@ public class OrderServiceImpl implements OrderService {
         orderDao.saveOrder(orderBean);
 
         List<OrderDetailBean> orderDetailBeans = orderSaveDTO.getList();
-        for (OrderDetailBean orderDetailBean : orderDetailBeans) {
+        List<OrderDetailBean> list = orderDetailDao.getOrderDetailByCode(orderDetailBeans);
+        for (OrderDetailBean orderDetailBean : list) {
             orderDetailBean.setOrderNo(orderBean.getNo());
             orderDetailBean.setEntryDt(new Date());
             orderDetailBean.setEntryId(optUser.getId());
@@ -101,7 +104,28 @@ public class OrderServiceImpl implements OrderService {
             orderDetailBean.setUpdateName(optUser.getRealName());
             orderDetailBean.setTotalMoney(orderDetailBean.getPrice() * orderDetailBean.getAmount());
         }
-        orderDetailDao.batchSaveOrderDetails(BatchInsertParameter.wrap(orderDetailBeans));
+        orderDetailDao.batchSaveOrderDetails(BatchInsertParameter.wrap(list));
         return orderBean;
     }
+
+    @Override
+    public OrderUpdateDTO showOrderAndOrderDetail(String no) {
+        OrderUpdateDTO orderUpdateDTO;
+
+        //根据订单查询订单表
+        OrderBean orderBean = orderDao.getOrderByNo(no);
+        //根据订单号查询订单明细表数据
+        List<OrderDetailBean> list = orderDetailDao.getOrderDetailByNo(no);
+        orderUpdateDTO = BeanMapper.map(orderBean, OrderUpdateDTO.class);
+        orderUpdateDTO.setOrderDetailBeans(list);
+
+        return orderUpdateDTO;
+    }
+
+    @Override
+    public Integer updateOrder(OrderSaveVo orderSaveVo) {
+        return null;
+    }
+
+
 }

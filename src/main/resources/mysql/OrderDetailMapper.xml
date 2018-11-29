@@ -5,8 +5,19 @@
     <resultMap id="AllSumAndMoney" type="com.skm.demo.persistence.DTO.OrderQueryDTO">
         <result column="productTypeNum" jdbcType="BIGINT" property="productTypeNum" />
         <result column="productNum" jdbcType="BIGINT" property="productNum" />
-        <result column="totalMoney" jdbcType="DECIMAL" property="productNum" />
+        <result column="totalMoney" jdbcType="DECIMAL" property="totalMoney" />
+        <result column="orderNo" jdbcType="VARCHAR" property="orderNo" />
     </resultMap>
+
+    <resultMap id="bean" type="com.skm.demo.domain.OrderDetailBean">
+        <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+        <result column="product_code" jdbcType="VARCHAR" property="productCode" />
+        <result column="product_name" jdbcType="VARCHAR" property="productName" />
+        <result column="amount" jdbcType="BIGINT" property="amount" />
+        <result column="price" jdbcType="DECIMAL" property="price" />
+        <result column="total_money" jdbcType="DECIMAL" property="totalMoney" />
+    </resultMap>
+
 
     <insert id="batchSaveOrderDetails" useGeneratedKeys="true"
             parameterType="com.skm.common.mybatis.dto.BatchInsertParameter" keyProperty="id">
@@ -47,12 +58,36 @@
         SELECT
         COUNT(order_no) as productTypeNum,
         SUM(amount) as productNum,
-        SUM(total_money) as totalMoney
+        SUM(total_money) as totalMoney,
+        order_no as orderNo
         FROM
         `demo_order_detail`
         WHERE
         <foreach collection="list" item="item" separator="OR">
             order_no =  #{item.orderNo}
+        </foreach>
+    </select>
+
+    <select id="getOrderDetailByNo" resultMap="bean"
+            parameterType="java.lang.String" >
+        SELECT
+        *
+        FROM
+        `demo_order_detail`
+        WHERE
+            `order_no` = #{no, jdbcType=VARCHAR}
+    </select>
+
+
+    <select id="getOrderDetailByCode" resultMap="bean"
+            parameterType="com.skm.demo.domain.OrderDetailBean" >
+        SELECT
+            *
+        FROM
+            `demo_order_detail`
+        WHERE
+        <foreach collection="list" item="item" separator="OR">
+            `product_code` =  #{item.productCode}
         </foreach>
     </select>
 </mapper>
