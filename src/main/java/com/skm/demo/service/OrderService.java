@@ -2,17 +2,11 @@ package com.skm.demo.service;
 
 import com.skm.common.bean.dto.Page;
 import com.skm.common.bean.dto.UnifyUser;
-import com.skm.demo.domain.OrderBean;
-import com.skm.demo.domain.OrderDetailBean;
+import com.skm.demo.persistence.DTO.OrderAndOrderDetailShowDTO;
 import com.skm.demo.persistence.DTO.OrderQueryDTO;
 import com.skm.demo.persistence.DTO.OrderSaveDTO;
 import com.skm.demo.persistence.DTO.OrderUpdateDTO;
 import com.skm.demo.persistence.qo.OrderQo;
-import com.skm.demo.web.vo.OrderSaveVo;
-import com.skm.demo.web.vo.OrderTemp;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 
 public interface OrderService {
@@ -31,22 +25,22 @@ public interface OrderService {
      * 保存订单
      * @param orderSaveDTO 数据转换对象
      * @param optUser 操作者
-     * @return 订单对象
+     * @return 数据结果
      */
-    OrderBean save(OrderSaveDTO orderSaveDTO, UnifyUser optUser);
+    OrderSaveDTO save(OrderSaveDTO orderSaveDTO, UnifyUser optUser);
 
     /**
      * 回显需要更新的订单数据
-     * @param no 订单号
+     * @param dto 订单号对象
      * @return 回显数据
      */
-    OrderUpdateDTO showOrderAndOrderDetail(String no);
+    OrderUpdateDTO showOrderAndOrderDetail(OrderAndOrderDetailShowDTO dto);
 
     /**
      * 更新订单信息
-     * @param orderSaveVo 需要更新的订单数据
-     * @return 状态码：0表示失败，1表示成功
+     * @param orderUpdateDTO 需要更新的订单数据
+     * @return 状态码
      */
-    Integer updateOrder(OrderSaveVo orderSaveVo);
+    Boolean updateOrder(OrderUpdateDTO orderUpdateDTO, UnifyUser optUser);
 }
 

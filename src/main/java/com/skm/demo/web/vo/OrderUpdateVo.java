@@ -1,27 +1,33 @@
 package com.skm.demo.web.vo;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
-public class OrderVo {
+public class OrderUpdateVo {
 
     /**
      * 采购单号
      */
+    @NotNull
     private String no;
 
     /**
      * 货主编码
      */
+    @NotNull
     private String shipperCode;
 
     /**
      * 货主名称
      */
+    @NotNull
     private String shipperName;
 
     /**
      * 供货商编码
      */
+    @NotNull
     private String providerCode;
 
     /**
@@ -39,17 +45,9 @@ public class OrderVo {
      */
     private Date deliveryDt;
 
-    /**
-     * 订购商品种类数量
-     */
-    private Long productTypeNum;
+    private List<OrderDetailSaveVo> beans;
 
-    /**
-     * 商品总数量
-     */
-    private Long productNum;
 
-    private Double totalMoney;
 
     public String getNo() {
         return no;
@@ -65,14 +63,6 @@ public class OrderVo {
 
     public void setShipperCode(String shipperCode) {
         this.shipperCode = shipperCode;
-    }
-
-    public String getShipperName() {
-        return shipperName;
-    }
-
-    public void setShipperName(String shipperName) {
-        this.shipperName = shipperName;
     }
 
     public String getProviderCode() {
@@ -107,27 +97,19 @@ public class OrderVo {
         this.deliveryDt = deliveryDt;
     }
 
-    public Long getProductTypeNum() {
-        return productTypeNum;
+    public List<OrderDetailSaveVo> getBeans() {
+        return beans;
     }
 
-    public void setProductTypeNum(Long productTypeNum) {
-        this.productTypeNum = productTypeNum;
+    public void setBeans(List<OrderDetailSaveVo> beans) {
+        this.beans = beans;
     }
 
-    public Long getProductNum() {
-        return productNum;
+    public String getShipperName() {
+        return shipperName;
     }
 
-    public void setProductNum(Long productNum) {
-        this.productNum = productNum;
-    }
-
-    public Double getTotalMoney() {
-        return totalMoney;
-    }
-
-    public void setTotalMoney(Double totalMoney) {
-        this.totalMoney = totalMoney;
+    public void setShipperName(String shipperName) {
+        this.shipperName = shipperName;
     }
 }

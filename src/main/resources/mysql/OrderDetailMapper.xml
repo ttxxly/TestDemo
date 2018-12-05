@@ -28,7 +28,7 @@
                     `product_name`,
                     `amount`,
                     `price`,
-                    `total_money`,
+                    `total_money`,3
                     `entry_id`,
                     `entry_name`,
                     `entry_dt`,
@@ -54,7 +54,7 @@
     </insert>
 
     <select id="getNumAndMoneyByNos" resultMap="AllSumAndMoney"
-            parameterType="com.skm.demo.domain.OrderDetailBean" >
+            parameterType="com.skm.common.mybatis.dto.BatchInsertParameter" >
         SELECT
         COUNT(order_no) as productTypeNum,
         SUM(amount) as productNum,
@@ -63,13 +63,10 @@
         FROM
         `demo_order_detail`
         WHERE
-        <foreach collection="list" item="item" separator="OR">
-            order_no =  #{item.orderNo}
-        </foreach>
+            `order_no` IN <foreach collection="orderNos" item="orderNo" open="(" separator="," close=")">#{orderNo, jdbcType=VARCHAR}</foreach>
     </select>
 
-    <select id="getOrderDetailByNo" resultMap="bean"
-            parameterType="java.lang.String" >
+    <select id="getOrderDetailByNo" resultMap="bean">
         SELECT
         *
         FROM
@@ -78,16 +75,28 @@
             `order_no` = #{no, jdbcType=VARCHAR}
     </select>
 
-
-    <select id="getOrderDetailByCode" resultMap="bean"
-            parameterType="com.skm.demo.domain.OrderDetailBean" >
-        SELECT
-            *
-        FROM
+    <delete id="deleteOrderDetailByNoAndCode" >
+        DELETE FROM
             `demo_order_detail`
         WHERE
-        <foreach collection="list" item="item" separator="OR">
-            `product_code` =  #{item.productCode}
-        </foreach>
-    </select>
+            `order_no` = #{no, jdbcType=VARCHAR}
+        AND
+            `product_code` = #{code, jdbcType=VARCHAR}
+    </delete>
+
+
+    <update id="batchUpdateOrderDetail" keyProperty="id" parameterType="com.skm.common.mybatis.dto.BatchUpdateParameter">
+        <![CDATA[
+            UPDATE `demo_order_detail`
+                SET `product_code` = #{productCode, jdbcType=VARCHAR}
+                    , `product_name` = #{productName, jdbcType=VARCHAR}
+                    , `amount` = #{amount, jdbcType=BIGINT}
+                    , `price` = #{price, jdbcType=DECIMAL}
+                    , `total_money` = #{totalMoney, jdbcType=DECIMAL}
+                    , `update_id` = #{updateId, jdbcType=BIGINT}
+                    , `update_name` = #{updateName, jdbcType=VARCHAR}
+                    , `update_dt` = #{updateDt, jdbcType=TIMESTAMP}
+                WHERE order_no = #{orderNo, jdbcType=VARCHAR}
+          ]]>
+    </update>
 </mapper>

@@ -37,7 +37,7 @@
     </sql>
 
     <insert id="save" useGeneratedKeys="true" keyProperty="id">
-        <![CDATA[
+
              INSERT INTO `common_user` (
                   `id`,
                   `login_username`,
@@ -70,7 +70,7 @@
                   #{updateName, jdbcType=VARCHAR},
                   #{updateDt, jdbcType=TIMESTAMP}
             )
-        ]]>
+
     </insert>
 
     <insert id="batchSave" useGeneratedKeys="true" parameterType="com.skm.common.mybatis.dto.BatchInsertParameter" keyProperty="id">

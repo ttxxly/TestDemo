@@ -12,7 +12,7 @@
         <result column="delivery_dt" jdbcType="TIMESTAMP" property="deliveryDt" />
     </resultMap>
 
-    <resultMap id="RDTO" type="com.skm.demo.persistence.DTO.OrderQueryDTO">
+    <resultMap id="OrderQueryDTO" type="com.skm.demo.persistence.DTO.OrderQueryDTO">
         <result column="no" jdbcType="VARCHAR" property="no" />
         <result column="shipper_code" jdbcType="VARCHAR" property="shipperCode" />
         <result column="shipper_name" jdbcType="VARCHAR" property="shipperName" />
@@ -43,12 +43,12 @@
         </where>
     </sql>
 
-    <select id="dynamicSelectOrder" resultMap="RDTO">
+    <select id="dynamicSelectOrder" resultMap="OrderQueryDTO">
         SELECT <include refid="columns" /> FROM `demo_order` <include refid="querySql" />
     </select>
 
 
-    <insert id="saveOrder" useGeneratedKeys="true" keyProperty="id">
+    <insert id="saveOrder" useGeneratedKeys="true" keyProperty="id" >
         <![CDATA[
              INSERT INTO `demo_order` (
                   `no`,
@@ -83,7 +83,7 @@
         ]]>
     </insert>
 
-    <select id="getOrderByNo" resultMap="RM" parameterMap="java.lang.String" >
+    <select id="getOrderByNo" resultMap="RM">
         SELECT
             *
         FROM
@@ -91,4 +91,23 @@
         WHERE
             `no` = #{no, jdbcType=VARCHAR}
     </select>
+
+
+    <update id="update" >
+        <![CDATA[
+            UPDATE `demo_order`
+                SET `shipper_code` = #{shipperCode, jdbcType=VARCHAR}
+                    , `shipper_name` = #{shipperName, jdbcType=VARCHAR}
+                    , `provider_code` = #{providerCode, jdbcType=VARCHAR}
+                    , `provider_name` = #{providerName, jdbcType=VARCHAR}
+                    , `submit_dt` = #{submitDt, jdbcType=TIMESTAMP}
+                    , `delivery_dt` = #{deliveryDt, jdbcType=TIMESTAMP}
+                    , `update_id` = #{updateId, jdbcType=BIGINT}
+                    , `update_name` = #{updateName, jdbcType=VARCHAR}
+                    , `update_dt` = #{updateDt, jdbcType=TIMESTAMP}
+                WHERE no = #{no, jdbcType=VARCHAR}
+        ]]>
+    </update>
+
+
 </mapper>

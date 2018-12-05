@@ -11,6 +11,8 @@ import com.skm.demo.persistence.DTO.ProductSaveResultDTO;
 import com.skm.demo.persistence.qo.ProductQo;
 import com.skm.demo.service.ProductService;
 import com.skm.demo.web.vo.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +24,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/web/v1/product")
+@Api(tags = {"商品接口"}, description = "操作商品表")
 public class ProductController extends BaseController {
 
     private ProductService productService;
@@ -31,7 +34,8 @@ public class ProductController extends BaseController {
         this.productService = productService;
     }
 
-    @PostMapping(value = "/page")
+    @PostMapping("/page")
+    @ApiOperation("动态查询商品列表")
     public Result<Page<ProductVo>> page(@RequestBody PageParam<ProductQueryVo> pageParam) {
         int pn = pageParam.getPn();
         int ps = pageParam.getPs();
@@ -39,7 +43,7 @@ public class ProductController extends BaseController {
 
         ProductQo productQo = Optional.of(pageParam.getConditions())
                 .map(cond -> BeanMapper.map(cond, ProductQo.class))
-                .orElse(null);
+                .orElse(new ProductQo());
 
         Page<ProductBean> beanPage = productService.list(productQo, ps, pn, currentUser);
 
@@ -51,16 +55,21 @@ public class ProductController extends BaseController {
         return Result.success(page);
     }
 
-    @PostMapping(value = "/getAllProduct")
+    @PostMapping("/getAllProduct")
+    @ApiOperation("获取商品表中的所有数据")
     public Result<List<ProductVo>> getAllProduct() {
         List<ProductBean> productBeans = productService.getAllProduct();
         List<ProductVo> productVos = BeanMapper.mapList(productBeans, ProductBean.class, ProductVo.class);
         return Result.success(productVos);
     }
 
-    @PostMapping(value = "/add")
-    public Result add(MultipartFile file) {
+    @PostMapping("/add")
+    @ApiOperation("上传文件，保存数据")
+    public Result<ProductSaveResultVO> add(MultipartFile file) {
+
         ProductSaveResultDTO pvo = productService.batchProductSave(file, getCurrentUser());
-        return Result.success(pvo);
+        ProductSaveResultVO productSaveResultVO = BeanMapper.map(pvo, ProductSaveResultVO.class);
+
+        return Result.success(productSaveResultVO);
     }
 }

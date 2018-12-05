@@ -1,14 +1,9 @@
 package com.skm.demo.persistence.dao;
 
-import com.skm.common.bean.BaseBean;
 import com.skm.common.bean.dto.Page;
 import com.skm.common.mybatis.dao.BaseDao;
-import com.skm.common.mybatis.dto.BatchInsertParameter;
 import com.skm.demo.domain.OrderBean;
-import com.skm.demo.domain.OrderDetailBean;
-import com.skm.demo.domain.UserBean;
 import com.skm.demo.persistence.DTO.OrderQueryDTO;
-import com.skm.demo.web.vo.OrderTemp;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

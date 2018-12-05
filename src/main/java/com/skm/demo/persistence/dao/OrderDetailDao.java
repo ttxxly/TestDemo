@@ -2,10 +2,11 @@ package com.skm.demo.persistence.dao;
 
 import com.skm.common.mybatis.dao.BaseDao;
 import com.skm.common.mybatis.dto.BatchInsertParameter;
+import com.skm.common.mybatis.dto.BatchUpdateParameter;
 import com.skm.demo.domain.OrderBean;
 import com.skm.demo.domain.OrderDetailBean;
 import com.skm.demo.persistence.DTO.OrderQueryDTO;
-import com.skm.demo.web.vo.OrderTemp;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
 @Repository("myOrderDetailDao")
 public interface OrderDetailDao<T> extends BaseDao<OrderBean> {
 
-    List<OrderQueryDTO> getNumAndMoneyByNos(List<OrderDetailBean> orderDetailBeans);
+    List<OrderQueryDTO> getNumAndMoneyByNos(@Param("orderNos") List<String> orderNos);
 
     /**
      * 批量保存
@@ -25,5 +26,7 @@ public interface OrderDetailDao<T> extends BaseDao<OrderBean> {
 
     List<OrderDetailBean> getOrderDetailByNo(String no);
 
-    List<OrderDetailBean> getOrderDetailByCode(List<OrderDetailBean> orderDetailBeans);
+    List<OrderDetailBean> deleteOrderDetailByNoAndCode(@Param("no") String no, @Param("code") String code);
+
+    int batchUpdateOrderDetail(BatchUpdateParameter<T> entity);
 }

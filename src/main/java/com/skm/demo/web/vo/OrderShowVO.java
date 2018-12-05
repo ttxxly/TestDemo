@@ -36,7 +36,7 @@ public class OrderShowVO {
      */
     private Date deliveryDt;
 
-    private List<OrderDetailVO> orderDetailVOS;
+    private List<OrderDetailVO> orderDetails;
 
     public String getNo() {
         return no;
@@ -86,11 +86,11 @@ public class OrderShowVO {
         this.deliveryDt = deliveryDt;
     }
 
-    public List<OrderDetailVO> getOrderDetailVOS() {
-        return orderDetailVOS;
+    public List<OrderDetailVO> getOrderDetails() {
+        return orderDetails;
     }
 
-    public void setOrderDetailVOS(List<OrderDetailVO> orderDetailVOS) {
-        this.orderDetailVOS = orderDetailVOS;
+    public void setOrderDetails(List<OrderDetailVO> orderDetails) {
+        this.orderDetails = orderDetails;
     }
 }

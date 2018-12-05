@@ -3,26 +3,21 @@ package com.skm.demo.web;
 import com.skm.common.bean.dto.Result;
 import com.skm.common.bean.utils.BeanMapper;
 import com.skm.common.spring.advisor.BaseController;
-import com.skm.demo.domain.OrderBean;
 import com.skm.demo.domain.OrderDetailBean;
-import com.skm.demo.persistence.DTO.OrderSaveDTO;
+import com.skm.demo.persistence.DTO.OrderDetailDeleteDTO;
+import com.skm.demo.persistence.DTO.OrderDetailObtainDTO;
 import com.skm.demo.service.OrderDetailService;
-import com.skm.demo.service.OrderService;
-import com.skm.demo.web.vo.OrderDetailSaveVo;
-import com.skm.demo.web.vo.OrderDetailVO;
-import com.skm.demo.web.vo.OrderSaveVo;
-import com.skm.demo.web.vo.OrderVo;
+import com.skm.demo.web.vo.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/web/v1/orderDetail")
+@Api(tags = "订单明细接口", description = "操作订单明细表")
 public class OrderDetailController extends BaseController {
 
     private OrderDetailService orderDetailService;
@@ -36,13 +31,26 @@ public class OrderDetailController extends BaseController {
     /**
      * 添加订单
      *
-     * @param no 订单号
+     * @param vo 订单号
      * @return 结果集
      */
-    @PostMapping(value = "/getOrderDetailByNo")
-    public Result<List<OrderDetailVO>> getOrderDetailByNo(String no) {
+    @PostMapping("/getOrderDetailByNo")
+    @ApiOperation("通过订单号获取订单明细列表")
+    public Result<List<OrderDetailVO>> getOrderDetailByNo(OrderDetailObtainVO vo) {
 
-        List<OrderDetailBean> orderDetailBeans = orderDetailService.getOrderDetailByNo(no);
+        OrderDetailObtainDTO dto = BeanMapper.map(vo, OrderDetailObtainDTO.class);
+        List<OrderDetailBean> orderDetailBeans = orderDetailService.getOrderDetailByNo(dto);
+
+        List<OrderDetailVO> list = BeanMapper.mapList(orderDetailBeans, OrderDetailBean.class, OrderDetailVO.class);
+        return Result.success(list);
+    }
+
+    @PostMapping("/deleteOrderDetailByNo")
+    @ApiOperation("通过订单号和商品编码删除该订单明细记录")
+    public Result<List<OrderDetailVO>> deleteOrderDetailByNoAndCode(OrderDetailDeleteVO vo) {
+
+        OrderDetailDeleteDTO dto = BeanMapper.map(vo, OrderDetailDeleteDTO.class);
+        List<OrderDetailBean> orderDetailBeans = orderDetailService.deleteOrderDetailByNoAndCode(dto);
 
         List<OrderDetailVO> list = BeanMapper.mapList(orderDetailBeans, OrderDetailBean.class, OrderDetailVO.class);
         return Result.success(list);

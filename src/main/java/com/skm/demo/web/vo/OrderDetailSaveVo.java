@@ -1,24 +1,30 @@
 package com.skm.demo.web.vo;
 
+import javax.validation.constraints.NotNull;
+
 public class OrderDetailSaveVo {
 
     /**
      * 商品编码
      */
+    @NotNull
     private String productCode;
     /**
      * 商品名称
      */
+    @NotNull
     private String productName;
 
     /**
      * 商品总数量
      */
+    @NotNull
     private Long amount;
 
     /**
      * 订单单价
      */
+    @NotNull
     private Double price;
 
     /**

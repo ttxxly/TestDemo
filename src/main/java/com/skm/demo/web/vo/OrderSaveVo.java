@@ -1,5 +1,6 @@
 package com.skm.demo.web.vo;
 
+import com.google.common.hash.BloomFilter;
 import com.skm.demo.domain.OrderBean;
 import com.skm.demo.domain.OrderDetailBean;
 
@@ -36,20 +37,23 @@ public class OrderSaveVo {
     /**
      * 供货商名称
      */
+    @NotNull
     private String providerName;
 
     /**
      * 订单提交时间
      */
+    @NotNull
     private Date submitDt;
 
     /**
      * 到货日期
      */
+    @NotNull
     private Date deliveryDt;
 
+    @NotNull
     private List<OrderDetailSaveVo> beans;
-
 
 
     public String getNo() {

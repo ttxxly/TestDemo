@@ -85,8 +85,8 @@
 
     <sql id="querySql">
         <where>
-            <if test="@Ognl@isNotEmpty(name)"> AND `name` like #{name, jdbcType=VARCHAR} </if>
-            <if test="@Ognl@isNotEmpty(code)"> AND `code` like #{code, jdbcType=VARCHAR} </if>
+            <if test="@Ognl@isNotEmpty(nameLike)"> AND `name` like #{nameLike, jdbcType=VARCHAR} </if>
+            <if test="@Ognl@isNotEmpty(codeLike)"> AND `code` like #{codeLike, jdbcType=VARCHAR} </if>
         </where>
     </sql>
 

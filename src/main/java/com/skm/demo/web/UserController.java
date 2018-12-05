@@ -33,14 +33,14 @@ public class UserController extends BaseController {
         this.userService = userService;
     }
 
-    @PostMapping(value = "/page")
+    @PostMapping("/page")
     public Result<Page<UserVo>> page(@RequestBody PageParam<UserQueryVo> pageParam) {
         int pn = pageParam.getPn();
         int ps = pageParam.getPs();
         UnifyUser currentUser = getCurrentUser();
-        UserQO userQO = Optional.of(pageParam.getConditions()).map(cond -> {
-            return BeanMapper.map(cond, UserQO.class);
-        }).orElse(null);
+        UserQO userQO = Optional.of(pageParam.getConditions())
+                .map(cond ->BeanMapper.map(cond, UserQO.class))
+                .orElse(null);
 
         Page<UserBean> beanPage = userService.list(userQO, ps, pn, currentUser);
 
@@ -52,7 +52,7 @@ public class UserController extends BaseController {
         return Result.success(page);
     }
 
-    @PostMapping(value = "/disable/{id}")
+    @PostMapping("/disable/{id}")
     public Result<UserVo> disable(@PathVariable("id") Long id) {
         UserBean userBean = new UserBean();
         userBean.setId(id);
@@ -63,7 +63,7 @@ public class UserController extends BaseController {
         return Result.success(vo);
     }
 
-    @PostMapping(value = "/active/{id}")
+    @PostMapping("/active/{id}")
     public Result<UserVo> active(@PathVariable("id") Long id) {
         UserBean userBean = new UserBean();
         userBean.setId(id);
@@ -74,7 +74,7 @@ public class UserController extends BaseController {
         return Result.success(vo);
     }
 
-    @PostMapping(value = "/save")
+    @PostMapping("/save")
     public Result<UserVo> save(@Validated @RequestBody UserSaveVo saveVo) {
         UserBean bean = BeanMapper.map(saveVo, UserBean.class);
         bean.setStatus(UserStatus.ACTIVED.getValue());
@@ -84,7 +84,7 @@ public class UserController extends BaseController {
         return Result.success(savedVo);
     }
 
-    @PostMapping(value = "/update")
+    @PostMapping("/update")
     public Result<UserVo> update(@Validated @RequestBody UserUpdateVo saveVo) {
         UserBean bean = BeanMapper.map(saveVo, UserBean.class);
 

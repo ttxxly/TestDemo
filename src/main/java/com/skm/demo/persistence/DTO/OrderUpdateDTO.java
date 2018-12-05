@@ -9,7 +9,7 @@ import java.util.List;
 
 public class OrderUpdateDTO extends OrderBean {
 
-    List<OrderDetailBean> orderDetailBeans;
+    private List<OrderDetailBean> orderDetailBeans;
 
     public List<OrderDetailBean> getOrderDetailBeans() {
         return orderDetailBeans;

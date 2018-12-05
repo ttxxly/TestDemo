@@ -5,9 +5,11 @@ import com.skm.common.bean.dto.UnifyUser;
 import com.skm.common.bean.utils.BeanMapper;
 import com.skm.common.mybatis.config.ITransactional;
 import com.skm.common.mybatis.dto.BatchInsertParameter;
+import com.skm.common.mybatis.dto.BatchUpdateParameter;
 import com.skm.demo.domain.OrderBean;
 import com.skm.demo.domain.OrderDetailBean;
 import com.skm.demo.domain.ProductBean;
+import com.skm.demo.persistence.DTO.OrderAndOrderDetailShowDTO;
 import com.skm.demo.persistence.DTO.OrderQueryDTO;
 import com.skm.demo.persistence.DTO.OrderSaveDTO;
 import com.skm.demo.persistence.DTO.OrderUpdateDTO;
@@ -52,13 +54,22 @@ public class OrderServiceImpl implements OrderService {
         page.setPs(ps);
         List<OrderQueryDTO> queryDTO = orderDao.dynamicSelectOrder(page);
         if (queryDTO.size() != 0) {
-            List<OrderDetailBean> orderDetailBeans = new ArrayList<>();
-            OrderDetailBean orderDetailBean = new OrderDetailBean();
+            List<String> orderNosList = new ArrayList<>();
+            List<OrderQueryDTO> queryDTOList = new ArrayList<>();
+            int count = 0;
             for (OrderBean orderBean : queryDTO) {
-                orderDetailBean.setOrderNo(orderBean.getNo());
-                orderDetailBeans.add(orderDetailBean);
+                orderNosList.add(orderBean.getNo());
+                count ++;
+                if (count == 500) {
+                    List<OrderQueryDTO> numAndMoneyByNos = orderDetailDao.getNumAndMoneyByNos(orderNosList);
+                    queryDTOList.addAll(numAndMoneyByNos);
+                    count = 0;
+                }
             }
-            List<OrderQueryDTO> queryDTOList = orderDetailDao.getNumAndMoneyByNos(orderDetailBeans);
+            if (count != 0) {
+                List<OrderQueryDTO> numAndMoneyByNos = orderDetailDao.getNumAndMoneyByNos(orderNosList);
+                queryDTOList.addAll(numAndMoneyByNos);
+            }
             for (OrderQueryDTO orderQueryDTO : queryDTOList) {
                 for (int i = 0; i < queryDTO.size(); i++) {
                     if (queryDTO.get(i).getNo().equals(orderQueryDTO.getOrderNo())) {
@@ -69,7 +80,6 @@ public class OrderServiceImpl implements OrderService {
                     }
                 }
             }
-
         }
         Page<OrderQueryDTO> queryDTOPage = new Page<>();
         queryDTOPage.setConditions(qo);
@@ -81,7 +91,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @ITransactional
-    public OrderBean save(OrderSaveDTO orderSaveDTO, UnifyUser optUser) {
+    public OrderSaveDTO save(OrderSaveDTO orderSaveDTO, UnifyUser optUser) {
+
+        OrderSaveDTO saveDTO = new OrderSaveDTO();
 
         OrderBean orderBean = BeanMapper.map(orderSaveDTO, OrderBean.class);
         orderBean.setEntryDt(new Date());
@@ -90,11 +102,11 @@ public class OrderServiceImpl implements OrderService {
         orderBean.setUpdateDt(new Date());
         orderBean.setUpdateId(optUser.getId());
         orderBean.setUpdateName(optUser.getRealName());
-        orderDao.saveOrder(orderBean);
+        int line = orderDao.saveOrder(orderBean);
+
 
         List<OrderDetailBean> orderDetailBeans = orderSaveDTO.getList();
-        List<OrderDetailBean> list = orderDetailDao.getOrderDetailByCode(orderDetailBeans);
-        for (OrderDetailBean orderDetailBean : list) {
+        for (OrderDetailBean orderDetailBean : orderDetailBeans) {
             orderDetailBean.setOrderNo(orderBean.getNo());
             orderDetailBean.setEntryDt(new Date());
             orderDetailBean.setEntryId(optUser.getId());
@@ -104,18 +116,24 @@ public class OrderServiceImpl implements OrderService {
             orderDetailBean.setUpdateName(optUser.getRealName());
             orderDetailBean.setTotalMoney(orderDetailBean.getPrice() * orderDetailBean.getAmount());
         }
-        orderDetailDao.batchSaveOrderDetails(BatchInsertParameter.wrap(list));
-        return orderBean;
+        int lines = orderDetailDao.batchSaveOrderDetails(BatchInsertParameter.wrap(orderDetailBeans));
+        if (line == 1 && lines == orderDetailBeans.size()) {
+            saveDTO = BeanMapper.map(orderBean, OrderSaveDTO.class);
+            saveDTO.setList(orderDetailBeans);
+
+            return saveDTO;
+        }
+        return saveDTO;
     }
 
     @Override
-    public OrderUpdateDTO showOrderAndOrderDetail(String no) {
+    public OrderUpdateDTO showOrderAndOrderDetail(OrderAndOrderDetailShowDTO dto) {
         OrderUpdateDTO orderUpdateDTO;
 
         //根据订单查询订单表
-        OrderBean orderBean = orderDao.getOrderByNo(no);
+        OrderBean orderBean = orderDao.getOrderByNo(dto.getNo());
         //根据订单号查询订单明细表数据
-        List<OrderDetailBean> list = orderDetailDao.getOrderDetailByNo(no);
+        List<OrderDetailBean> list = orderDetailDao.getOrderDetailByNo(dto.getNo());
         orderUpdateDTO = BeanMapper.map(orderBean, OrderUpdateDTO.class);
         orderUpdateDTO.setOrderDetailBeans(list);
 
@@ -123,9 +141,39 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Integer updateOrder(OrderSaveVo orderSaveVo) {
-        return null;
+    public Boolean updateOrder(OrderUpdateDTO orderUpdateDTO, UnifyUser optUser) {
+
+        OrderBean orderBean = BeanMapper.map(orderUpdateDTO, OrderBean.class);
+        orderBean.setUpdateDt(new Date());
+        orderBean.setUpdateId(optUser.getId());
+        orderBean.setUpdateName(optUser.getRealName());
+
+        List<OrderDetailBean> list = orderUpdateDTO.getOrderDetailBeans();
+        List<OrderDetailBean> insertBeans = new ArrayList<>();
+        List<OrderDetailBean> updateBeans = new ArrayList<>();
+        for (OrderDetailBean orderDetailBean : list) {
+            if (orderDetailBean.getId() == null) {
+                orderDetailBean.setEntryDt(new Date());
+                orderDetailBean.setEntryId(optUser.getId());
+                orderDetailBean.setEntryName(optUser.getRealName());
+                orderDetailBean.setUpdateDt(new Date());
+                orderDetailBean.setUpdateId(optUser.getId());
+                orderDetailBean.setUpdateName(optUser.getRealName());
+                orderDetailBean.setTotalMoney(orderDetailBean.getPrice() * orderDetailBean.getAmount());
+                insertBeans.add(orderDetailBean);
+            }else {
+                orderDetailBean.setUpdateDt(new Date());
+                orderDetailBean.setUpdateId(optUser.getId());
+                orderDetailBean.setUpdateName(optUser.getRealName());
+                orderDetailBean.setTotalMoney(orderDetailBean.getPrice() * orderDetailBean.getAmount());
+                updateBeans.add(orderDetailBean);
+            }
+        }
+        int update = orderDao.update(orderBean);
+        int batchUpdate = orderDetailDao.batchUpdateOrderDetail(BatchUpdateParameter.wrap(updateBeans));
+        int lines = orderDetailDao.batchSaveOrderDetails(BatchInsertParameter.wrap(insertBeans));
+
+
+        return update == 1 && batchUpdate+lines == list.size();
     }
-
-
 }
